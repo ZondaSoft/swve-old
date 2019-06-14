@@ -1,0 +1,14 @@
+[{
+    title: 'Vacaciones 2016',
+    start: new Date(y, m, 1),
+    end:  new Date(y, m, 15),
+    backgroundColor: '#00a65a', //green
+    borderColor: '#00a65a' //green
+},
+{
+    title: 'Suspendido',
+    start: new Date(y, m-1, 29),
+    end:  new Date(y, m-1, 20),
+    backgroundColor: '#f56954', //red
+    borderColor: '#f56954' //red
+}]
