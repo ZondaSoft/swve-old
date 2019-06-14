@@ -5,11 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Veh001;
-use App\Sue001;
-use App\Sue011;
-use App\Sue028;
-use App\Sue071;
-use App\Sue031;
+use App\Veh010;
 
 class InfNovedController extends Controller
 {
@@ -26,7 +22,7 @@ class InfNovedController extends Controller
      */
     public function index($id = null, $nrolegajo = null, $cod_nov = null)
     {
-        $legajoNew = new Sue028;
+        $legajoNew = new Veh001;
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 100;
@@ -41,39 +37,34 @@ class InfNovedController extends Controller
         //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
 
         if ($id == null) {
-            $periodo = Sue071::where('activo','Si')->first();
+            $periodo = Veh001::first();
         } else  {
-            $periodo = Sue071::where('id',$id)->first();
+            $periodo = Veh001::where('id',$id)->first();
 
             if ($periodo == null) {
-                $periodo = Sue071::where('activo','Si')->first();
+                $periodo = Veh001::first();
             }
         }
 
         if ($periodo != null) {
-            $periodo2 = substr($periodo->periodo,3,4) . substr($periodo->periodo,0,2);
+            $novedades = Veh001::orderBy('dominio')->where('id','>',0)->paginate(9);
 
-            $novedades = Sue028::orderBy('fecha')->where('periodo',$periodo2)->paginate(9);
-
-            $novedades->periodo = $periodo->periodo;
         } else  {
-            $novedades = Sue028::orderBy('fecha')->where('id',0)->paginate(9);
+            $novedades = Veh001::orderBy('dominio')->where('id','>',0)->paginate(9);
 
-            $novedades->periodo = "  /    ";
         }
 
         // Combos de tablas anexas
-        $legajos   = Veh001::orderBy('codigo')->get();
-        $sectores  = Sue011::orderBy('codigo')->get();
+        $legajos   = Veh001::orderBy('dominio')->get();
 
-        return view('informes.legajos')->with(compact('legajo','legajoNew','agregar','edicion','active','sectores','novedades','legajos'));
+        return view('informes.legajos')->with(compact('legajo','legajoNew','agregar','edicion','active','novedades','legajos'));
     }
 
 
 
     public function novedades($id = null, $nrolegajo = null, $cod_nov = null)
     {
-        $legajoNew = new Sue028;
+        $legajoNew = new Veh001;
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 120;
@@ -88,25 +79,19 @@ class InfNovedController extends Controller
         //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
 
         if ($id == null) {
-            $periodo = Sue071::where('activo','Si')->first();
+            $periodo = Veh001::where('id','>',0)->first();
         } else  {
-            $periodo = Sue071::where('id',$id)->first();
+            $periodo = Veh001::where('id',$id)->first();
 
             if ($periodo == null) {
-                $periodo = Sue071::where('activo','Si')->first();
+                $periodo = Veh001::where('id','Si')->first();
             }
         }
 
         if ($periodo != null) {
-            $periodo2 = substr($periodo->periodo,3,4) . substr($periodo->periodo,0,2);
-
-            $novedades = Sue028::orderBy('fecha')->where('periodo',$periodo2)->paginate(9);
-
-            $novedades->periodo = $periodo->periodo;
+            $novedades = Veh010::orderBy('dominio')->where('id','>',0)->paginate(9);
         } else  {
-            $novedades = Sue028::orderBy('fecha')->where('id',0)->paginate(9);
-
-            $novedades->periodo = "  /    ";
+            $novedades = Sue028::orderBy('dominio')->where('id',0)->paginate(9);
         }
 
         if ($periodo != null) {
@@ -118,9 +103,8 @@ class InfNovedController extends Controller
         }
 
         // Combos de tablas anexas
-        $legajos   = Veh001::orderBy('codigo')->get();
-        $sectores  = Sue011::orderBy('codigo')->get();
-        $novedades  = Sue031::orderBy('codigo')->get();
+        $legajos   = Veh001::orderBy('dominio')->get();
+        $novedades  = Veh010::orderBy('dominio')->get();
 
         return view('informes.novedades')->with(compact('legajo','legajoNew','agregar','edicion','active','sectores','novedades','legajos','ddesde','dhasta'));
     }
@@ -128,7 +112,7 @@ class InfNovedController extends Controller
 
     public function fichadas($id = null, $nrolegajo = null, $cod_nov = null)
     {
-        $legajoNew = new Sue028;
+        $legajoNew = new Veh001;
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 140;
@@ -143,12 +127,12 @@ class InfNovedController extends Controller
         //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
 
         if ($id == null) {
-            $periodo = Sue071::where('activo','Si')->first();
+            $periodo = Veh010::where('id','>',0)->first();
         } else  {
-            $periodo = Sue071::where('id',$id)->first();
+            $periodo = Veh010::where('id',$id)->first();
 
             if ($periodo == null) {
-                $periodo = Sue071::where('activo','Si')->first();
+                $periodo = Veh010::first();
             }
         }
 
@@ -199,12 +183,12 @@ class InfNovedController extends Controller
         //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
 
         if ($id == null) {
-            $periodo = Sue071::where('activo','Si')->first();
+            $periodo = Veh001::where('activo','Si')->first();
         } else  {
-            $periodo = Sue071::where('id',$id)->first();
+            $periodo = Veh001::where('id',$id)->first();
 
             if ($periodo == null) {
-                $periodo = Sue071::where('activo','Si')->first();
+                $periodo = Veh001::where('activo','Si')->first();
             }
         }
 

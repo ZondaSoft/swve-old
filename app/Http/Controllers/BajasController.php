@@ -23,7 +23,7 @@ class BajasController extends Controller
     {
         if ($id == null) {
               $legajo = Veh001::first();
-              $id = $legajo->id;
+
         } else
         {
               $legajo = Veh001::find($id);
@@ -36,46 +36,39 @@ class BajasController extends Controller
         if ($legajo == null)
             $legajo = new Veh001;
 
-          // Si la var. $direction muestra que el cursor se mueve (-1)
-          if ($direction == -1) {
-              $legajo = Veh001::where('id', '<', $id)
-                  ->orderBy('id', 'desc')
-                  ->first();
+        $id = $legajo->id;
 
-              if ($legajo == null)
-                  $legajo = Veh001::first();
-          }
+        // Si la var. $direction muestra que el cursor se mueve (-1)
+        if ($direction == -1) {
+            $legajo = Veh001::where('id', '<', $id)
+                ->orderBy('id', 'desc')
+                ->first();
 
-          // Si la var. $direction muestra que el cursor se mueve (+1)
-          if ($direction == 1) {
-              $legajo = Veh001::where('id', '>', $id)->first();
+            if ($legajo == null)
+                $legajo = Veh001::first();
+        }
 
-              if ($legajo == null)
-                  $legajo = Veh001::latest('id')->first();
-          }
+        // Si la var. $direction muestra que el cursor se mueve (+1)
+        if ($direction == 1) {
+            $legajo = Veh001::where('id', '>', $id)->first();
+
+            if ($legajo == null)
+                $legajo = Veh001::latest('id')->first();
+        }
 
 
-          // Si la var. $direction muestra que el cursor se mueve al final
-          if ($direction == 9) {
-              $legajo = Veh001::latest('id')->first();
-          }
+        // Si la var. $direction muestra que el cursor se mueve al final
+        if ($direction == 9) {
+            $legajo = Veh001::latest('id')->first();
+        }
 
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 2;
-        $sectores   = Sue011::orderBy('detalle')->get();
-        $ccostos    = Sue030::orderBy('detalle')->get();
-        $jerarquias = Sue014::orderBy('detalle')->get();
-        $categorias = Sue006::orderBy('detalle')->get();
-        $cuadrillas = Sue054::orderBy('detalle')->get();
-        $obras      = Sue009::orderBy('detalle')->get();
-        $sindicatos = Sue015::orderBy('detalle')->get();
-        $convenios  = Sue007::orderBy('detalle')->get();
-        $contratos  = Sue107::orderBy('detalle')->get();
 
         // Combos de tablas anexas
         $novedades   = Veh010::orderBy('detalle')->paginate(8);
 
-        return view('bajas.index')->with(compact('legajo','agregar','edicion','active','novedades','sectores','ccostos','jerarquias','categorias','cuadrillas','obras','sindicatos','convenios','contratos'));;
+        return view('bajas.index')->with(compact('legajo','agregar','edicion','active','novedades'));;
     }
 }

@@ -15,8 +15,8 @@ class CreateVeh001sTable extends Migration
     {
         Schema::create('veh001s', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('dominio',7)->unique();
-            $table->string('codigo',3);
+            $table->string('dominio',7)->nullable();
+            $table->string('codigo',3)->nullable();
             $table->string('vehiculo',40)->nullable();
             $table->string('detalle',50)->nullable();
             $table->string('domic',30)->nullable();
@@ -43,7 +43,7 @@ class CreateVeh001sTable extends Migration
             $table->string('equipo',20)->nullable();
             $table->string('modelo_eq',25)->nullable();
             $table->integer('anio_eq')->nullable();
-            $table->integer('pventa',4)->nullable();
+            $table->integer('pventa')->nullable();
             $table->timestamps();
         });
     }

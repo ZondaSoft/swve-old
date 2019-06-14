@@ -16,6 +16,7 @@ class CreateVeh010sTable extends Migration
         Schema::create('veh010s', function (Blueprint $table) {
             $table->increments('id');
             $table->string('unidad',3)->nullable();
+            $table->string('dominio',7)->nullable();
             $table->date('fecha')->nullable();
             $table->integer('encarga')->nullable();
             $table->string('tipo',20)->nullable();

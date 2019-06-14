@@ -39,7 +39,7 @@ class HomeController extends Controller
     {
         if ($id == null) {
               $legajo = Veh001::first();      // find($id);     // dd($legajo);
-              $id = $legajo->id;
+
           } else {
               $legajo = Veh001::find($id);
 
@@ -50,6 +50,8 @@ class HomeController extends Controller
         // Si a pesar de todos los controles $legajo es null es porque no hay registros
         if ($legajo == null)
             $legajo = new Veh001;
+
+        $id = $legajo->id;
 
         // Si la var. $direction muestra que el cursor se mueve (-1)
         if ($direction == -1) {
