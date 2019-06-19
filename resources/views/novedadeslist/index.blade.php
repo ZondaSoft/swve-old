@@ -596,5 +596,5 @@
 
 @endsection
 
-@include('novedadeslist.modal-create')
-@include('novedadeslist.modal-edit')
+@include('novedadeslist.rto-create')
+@include('novedadeslist.rto-edit')

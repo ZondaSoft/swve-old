@@ -5,9 +5,9 @@
 @section('content')
 
 @if($agregar == true)
-    <form method="post" action="{{ url('/home/add') }}" enctype="multipart/form-data">
+    <form method="post" action="{{ url('/bajas/add') }}" enctype="multipart/form-data">
 @else
-    <form method="post" action="{{ url('/home/edit/'.$legajo->id) }}" enctype="multipart/form-data">
+    <form method="post" action="{{ url('/bajas/edit/'.$legajo->id) }}" enctype="multipart/form-data">
 @endif
 
 {{ csrf_field() }}
@@ -21,11 +21,11 @@
    </div>
 
    <div class="col-md-3">
-        <a class="btn btn-labeled btn-default" type="button" href="/home/{{ $legajo?$legajo->id:'' }}/-1">
+        <a class="btn btn-labeled btn-default" type="button" href="/bajas/{{ $legajo?$legajo->id:'' }}/-1">
             <span class="btn-label"><i class="fa fa-arrow-left"></i>
             </span>
         </a>
-        <a class="btn btn-labeled btn-default" type="button" href="/home/{{ $legajo?$legajo->id:'' }}/1">
+        <a class="btn btn-labeled btn-default" type="button" href="/bajas/{{ $legajo?$legajo->id:'' }}/1">
             <span class="btn-label"><i class="fa fa-arrow-right"></i>
             </span>
         </a>
@@ -39,14 +39,14 @@
              </span>Grabar
            </button>
 
-           <a href="{{ url('/home') }}" class="btn btn-labeled btn-danger mb-2">
+           <a href="{{ url('/bajas') }}" class="btn btn-labeled btn-danger mb-2">
               <span class="btn-label"><i class="fa fa-times"></i>
               </span>Cancelar
            </a>
       @else
-           <a class="btn btn-oval btn-success" href="/home/add" >Agregar</a>
-           <a class="btn btn-oval btn-success" href="/home/edit/{{ $legajo->id }}">Editar</a>
-           <a class="btn btn-oval btn-danger" href="/home/delete">Borrar</a>
+           <a class="btn btn-oval btn-success" href="/bajas/add" >Agregar</a>
+           <a class="btn btn-oval btn-success" href="/bajas/edit/{{ $legajo->id }}">Editar</a>
+           <a class="btn btn-oval btn-danger" href="/bajas/delete">Borrar</a>
       @endif
     </div>
 </div>
@@ -96,7 +96,8 @@
                                 type="text" name="codigo" id="codigo"
                                 {{ $edicion?'':'disabled' }}
                                 {{ $agregar?'enabled autofocus=""':'disabled' }}
-                                value="{{ old('codigo',$legajo->codigo) }}" maxlength="7" required>
+                                value="{{ old('codigo',$legajo->codigo) }}"
+                                maxlength="7" required autocomplete="off">
                           </div>
 
                           <div class="col-lg-2 mb-2">
@@ -157,21 +158,30 @@
 
                   <div class="col-md-10">
                        <div class="form-row">
-                          <!-- <div class="col-lg-2 mb-2">
+                         <div class="col-md-5">
+                             <label class="col-form-label">Tipo de Vehículo *</label>
+                             <select class="form-control" id="grupo" name="grupo" {{ $edicion?'enabled':'disabled' }}>
+                                @foreach ($tipos as $tipo)
+                                    <option value = "{{ $tipo->codigo  }}"
+                                      @if ($legajo->grupo == $tipo->codigo)  selected   @endif  >
+                                      {{ $tipo->detalle }}   ({{ $tipo->codigo  }})
+                                    </option>
+                                @endforeach
+                            </select>
 
-                              <label class="col-form-label">Fecha de Alta *</label>
-                                <div class="input-group date" id="datetimepicker1" data-provide="datepicker" data-date-format="dd/mm/yyyy"
-                                keyboardNavigation="true" title="Seleccione fecha" autoclose="true">
-                                  <input class="form-control" type="text" value="{{ old('alta',$legajo->alta) }}" name="alta" {{ $edicion?'enabled':'disabled' }}>
-                                  <span class="input-group-append input-group-addon">
-                                    <span class="input-group-text fa fa-calendar"></span>
-                                  </span>
-                              </div>
-                          </div> -->
+                             @if ($errors->has('grupo'))
+                                 <div class="alert alert-danger">
+                                     <ul>
+                                         <li>{{ $errors->first('grupo') }}</li>
+                                     </ul>
+                                 </div>
+                             @endif
+                         </div>
                           <div class="col-lg-2 mb-2">
                             <label class="col-form-label">Año</label>
-                            <input class="form-control" type="text" name="edad"
-                            disabled="" required>
+                            <input class="form-control" type="text" name="anio" id="anio"
+                            {{ $edicion?'enabled':'disabled' }}
+                            value="{{ old('anio',$legajo->anio) }}" required>
                           </div>
 
                           <div class="col-md-1"></div>
@@ -188,7 +198,7 @@
                           <label class="col-form-label">Motor</label>
                           <input class="form-control" type="text" name="motor" id="motor"
                           {{ $edicion?'enabled':'disabled' }}
-                          value="{{ old('motor',$legajo->motor) }}" >
+                          value="{{ old('motor',$legajo->motor) }}" autocomplete="off">
 
                           @if ($errors->has('motor'))
                               <div class="alert alert-danger">
@@ -203,7 +213,7 @@
                             <label class="col-form-label">Chasis</label>
                             <input class="form-control" type="text" name="chasis"
                             {{ $edicion?'enabled':'disabled' }}
-                            value="{{ old('chasis',$legajo->chasis) }}" required>
+                            value="{{ old('chasis',$legajo->chasis) }}" autocomplete="off" required>
 
                             @if ($errors->has('chasis'))
                                 <div class="alert alert-danger">
@@ -218,21 +228,6 @@
 
                   <div class="col-xl-10 col-md-10">
                     <div class="form-row">
-                        <div class="col-md-5">
-                          <label class="col-form-label">Tipo</label>
-                          <input class="form-control" type="text" name="modelo2" id="modelo2"
-                          {{ $edicion?'enabled':'disabled' }}
-                          value="{{ old('modelo2',$legajo->modelo2) }}" >
-
-                          @if ($errors->has('modelo2'))
-                              <div class="alert alert-danger">
-                                  <ul>
-                                      <li>{{ $errors->first('modelo2') }}</li>
-                                  </ul>
-                              </div>
-                          @endif
-                        </div>
-
                         <div class="col-md-5">
                             <label class="col-form-label">Estado</label>
                             <input class="form-control" type="text" name="estado"
@@ -268,10 +263,10 @@
                         </div>
 
                         <div class="col-md-5">
-                            <label class="col-form-label">Modelo</label>
+                            <label class="col-form-label">Modelo (Equipo/Acoplado)</label>
                             <input class="form-control" type="text" name="modelo_eq"
                             {{ $edicion?'enabled':'disabled' }}
-                            value="{{ old('modelo_eq',$legajo->modelo_eq) }}" required>
+                            value="{{ old('modelo_eq',$legajo->modelo_eq) }}">
 
                             @if ($errors->has('modelo_eq'))
                                 <div class="alert alert-danger">
@@ -387,15 +382,6 @@
                                        </span>
                                    </div>
                                </div>
-                                <div class="col-lg-3 mb-3">
-                                  <label class="col-form-label">Vencimiento RTO</label>
-                                  <div class="input-group date" id="datetimepicker1" data-provide="datepicker" data-date-format="dd/mm/yyyy" keyboardNavigation="true" title="Seleccione fecha" autoclose="true">
-                                      <input class="form-control" type="text" value="{{ $legajo->vto_tecni }}" name="vto_tecni" {{ $edicion?'enabled':'disabled' }}>
-                                      <span class="input-group-append input-group-addon">
-                                        <span class="input-group-text fa fa-calendar"></span>
-                                      </span>
-                                  </div>
-                               </div>
                               </div>
                            </div>
 
@@ -441,7 +427,7 @@
 
                <div class="card card-default mb-1 border-info">
                       <div class="card-header text-white bg-info" id="headingTwo">
-                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" href="">Historial de novedades</a>
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" href="">Siniestros</a>
                          </h5>
                       </div>
                       <div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -478,8 +464,6 @@
                                          </strong>
                                        </th>
                                        <th width="1%"></th>
-                                       <th></th>
-                                       <th></th>
                                      </thead>
                                      <tbody>
                                         @foreach ($novedades as $novedad)
@@ -545,31 +529,6 @@
                                                    <em class="fa fa-eye"></em></a>
                                                </div>
                                              </td>
-
-                                             <td>
-                                               <div class="ml-auto">
-                                                  <a title="Editar novedad" class="btn btn-warning btn-sm" onclick="showModalEdit({{ $novedad->id }})">
-                                                  <em class="fa fa-pencil" style="color: white"></em></a>
-
-                                                  <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                                    type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                    <em class="fa fa-sticky-note"></em>
-                                                     Editar
-                                                  </button>  -->
-                                               </div>
-                                             </td>
-
-                                             <td>
-                                               <div class="ml-auto">
-                                                  <a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                    <em class="fa fa-trash" style="color: white"></em></a>
-                                                  <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
-                                                  <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                    <em class="fa fa-trash" style="color: red"></em>
-                                                  </a> -->
-                                               </div>
-                                             </td>
-
                                            </tr>
                                         @endforeach
                                      </tbody>
@@ -578,14 +537,7 @@
                                <!-- END table-responsive-->
                                <div class="card-footer">
                                   <div class="d-flex">
-                                     <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                       type="button" data-toggle="modal" data-target="#myModalLarge">
-                                       <em class="fa fa-sticky-note"></em>
-                                        Agregar...
-                                     </button>
-
                                      <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
-
                                      <nav class="ml-auto">
                                         <ul class="pagination pagination-sm">
                                            {{ $novedades->links() }}
@@ -606,13 +558,273 @@
                       </div>
                </div>
 
-
+               <!--=======================================================
+               /              Multas
+               =========================================================-->
                <div class="card card-default mb-1 border-info">
                       <div class="card-header bg-info" id="headingFour">
-                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" href="">Tramites</a>
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" href="">Multas</a>
+                       </h5>
+                      </div>
+                      <div class="collapse" id="collapseFour" aria-labelledby="headingFour" data-parent="#accordion">
+
+                          <div class="col-md-10">
+                             <div class="form-row">
+                               <!-- START table-responsive-->
+                               <div class="table-responsive">
+                                  <table class="table table-striped table-bordered table-hover">
+                                     <thead>
+                                       <th>
+                                         <strong>Fecha</strong>
+                                       </th>
+                                       <th style="width: 500px">
+                                         <strong>Tipo de novedad</strong>
+                                       </th>
+                                       <th>
+                                         <strong>Encargado</strong>
+                                       </th>
+                                       <th style="width: 800px">
+                                         <strong>
+                                           Detalle
+                                         </strong>
+                                       </th>
+                                       <th>
+                                         <strong>
+                                           Vencimiento
+                                         </strong>
+                                       </th>
+                                       <th width="1%"></th>
+                                     </thead>
+                                     <tbody>
+                                        @foreach ($novedades as $novedad)
+                                           <tr>
+
+                                             <td>
+                                                <div class="media align-items-center">
+                                                   <div class="media-body d-flex">
+                                                      <div>
+                                                         {{ $novedad?$novedad->fecha :'' }}
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </td>
+
+                                             <td>
+                                                <div class="media align-items-center">
+                                                   <div class="media-body d-flex">
+                                                      <div>
+                                                         {{ $novedad?$novedad->tipo :'' }}
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </td>
+
+                                             <td>
+                                                <div class="media align-items-center">
+                                                   <div class="media-body d-flex">
+                                                      <div>
+                                                         {{ $novedad?$novedad->encarga:'' }}
+                                                      </div>
+
+                                                   </div>
+                                                </div>
+                                             </td>
+
+                                             <td>
+                                                <div class="media align-items-center">
+                                                   <div class="media-body d-flex">
+                                                      <div>
+                                                         {{ $novedad?$novedad->detalle:'' }}
+                                                      </div>
+
+                                                   </div>
+                                                </div>
+                                             </td>
+
+                                             <td>
+                                                <div class="media align-items-center">
+                                                   <div class="media-body d-flex">
+                                                      <div>
+                                                         {{ $novedad?$novedad->vencimient :'' }}
+                                                      </div>
+
+                                                   </div>
+                                                </div>
+                                             </td>
+
+                                             <td>
+                                               <div class="ml-auto">
+                                                 <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
+                                                   type="button" data-toggle="modal" data-target="#myModalEdit">
+                                                   <em class="fa fa-eye"></em></a>
+                                               </div>
+                                             </td>
+                                           </tr>
+                                        @endforeach
+                                     </tbody>
+                                  </table>
+                               </div>
+                               <!-- END table-responsive-->
+                               <div class="card-footer">
+                                  <div class="d-flex">
+                                     <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
+
+                                     <nav class="ml-auto">
+                                        <ul class="pagination pagination-sm">
+                                           {{ $novedades->links() }}
+                                        </ul>
+                                     </nav>
+                                  </div>
+
+                                  <fieldset></fieldset>
+
+
+                                </div>
+                              </div>
+                           </div>
+
+                      </div>
+               </div>
+
+
+               <!--=======================================================
+               /              Rto
+               =========================================================-->
+               <div class="card card-default mb-1 border-info">
+                      <div class="card-header bg-info" id="headingFive">
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" href="">Revisión Técnica Obligatoria</a>
                        </h5>
                       </div>
                       <div class="collapse" id="collapseFive" aria-labelledby="headingFive" data-parent="#accordion">
+                         <div class="card-body border-top">
+
+                            <div class="col-md-10">
+                               <div class="form-row">
+                                 <!-- START table-responsive-->
+                                 <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover">
+                                       <thead>
+                                         <th>
+                                           <strong>Fecha</strong>
+                                         </th>
+                                         <th style="width: 500px">
+                                           <strong>Tipo de novedad</strong>
+                                         </th>
+                                         <th>
+                                           <strong>Encargado</strong>
+                                         </th>
+                                         <th style="width: 800px">
+                                           <strong>
+                                             Detalle
+                                           </strong>
+                                         </th>
+                                         <th>
+                                           <strong>
+                                             Vencimiento
+                                           </strong>
+                                         </th>
+                                         <th width="1%"></th>
+                                       </thead>
+                                       <tbody>
+                                          @foreach ($novedades as $novedad)
+                                             <tr>
+
+                                               <td>
+                                                  <div class="media align-items-center">
+                                                     <div class="media-body d-flex">
+                                                        <div>
+                                                           {{ $novedad?$novedad->fecha :'' }}
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </td>
+
+                                               <td>
+                                                  <div class="media align-items-center">
+                                                     <div class="media-body d-flex">
+                                                        <div>
+                                                           {{ $novedad?$novedad->tipo :'' }}
+                                                        </div>
+                                                     </div>
+                                                  </div>
+                                               </td>
+
+                                               <td>
+                                                  <div class="media align-items-center">
+                                                     <div class="media-body d-flex">
+                                                        <div>
+                                                           {{ $novedad?$novedad->encarga:'' }}
+                                                        </div>
+
+                                                     </div>
+                                                  </div>
+                                               </td>
+
+                                               <td>
+                                                  <div class="media align-items-center">
+                                                     <div class="media-body d-flex">
+                                                        <div>
+                                                           {{ $novedad?$novedad->detalle:'' }}
+                                                        </div>
+
+                                                     </div>
+                                                  </div>
+                                               </td>
+
+                                               <td>
+                                                  <div class="media align-items-center">
+                                                     <div class="media-body d-flex">
+                                                        <div>
+                                                           {{ $novedad?$novedad->vencimient :'' }}
+                                                        </div>
+
+                                                     </div>
+                                                  </div>
+                                               </td>
+
+                                               <td>
+                                                 <div class="ml-auto">
+                                                   <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
+                                                     type="button" data-toggle="modal" data-target="#myModalEdit">
+                                                     <em class="fa fa-eye"></em></a>
+                                                 </div>
+                                               </td>
+                                             </tr>
+                                          @endforeach
+                                       </tbody>
+                                    </table>
+                                 </div>
+                                 <!-- END table-responsive-->
+                                 <div class="card-footer">
+                                    <div class="d-flex">
+                                       <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
+
+                                       <nav class="ml-auto">
+                                          <ul class="pagination pagination-sm">
+                                             {{ $novedades->links() }}
+                                          </ul>
+                                       </nav>
+                                    </div>
+
+                                    <fieldset></fieldset>
+
+
+                                   </div>
+                                </div>
+                             </div>
+                         </div>
+                      </div>
+               </div>
+
+               <!--=======================================================
+               /              Baja
+               =========================================================-->
+               <div class="card card-default mb-1 border-info">
+                      <div class="card-header bg-info" id="headingSeven">
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" href="">Baja</a>
+                       </h5>
+                      </div>
+                      <div class="collapse" id="collapseSeven" aria-labelledby="headingSeven" data-parent="#accordion">
                          <div class="card-body border-top">
 
                             <div class="col-md-10">
@@ -741,12 +953,6 @@
                                  <!-- END table-responsive-->
                                  <div class="card-footer">
                                     <div class="d-flex">
-                                       <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                         type="button" data-toggle="modal" data-target="#myModalLarge">
-                                         <em class="fa fa-sticky-note"></em>
-                                          Agregar...
-                                       </button>
-
                                        <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
 
                                        <nav class="ml-auto">
@@ -766,7 +972,6 @@
                       </div>
                </div>
 
-
                <div class="card-footer" style="text-align: right;">
                    <div class="col-md-11" style="text-align: right;">
                        @if($edicion == true)
@@ -775,14 +980,14 @@
                              </span>Grabar
                            </button>
 
-                           <a href="{{ url('/home') }}" class="btn btn-labeled btn-danger mb-2">
+                           <a href="{{ url('/bajas') }}" class="btn btn-labeled btn-danger mb-2">
                              <span class="btn-label"><i class="fa fa-times"></i>
                              </span>Cancelar
                            </a>
                       @else
-                           <a class="btn btn-oval btn-success" href="/home/add" >Agregar</a>
-                           <a class="btn btn-oval btn-success" href="/home/edit/{{ $legajo->id }}">Editar</a>
-                           <a class="btn btn-oval btn-danger" href="/home/delete">Borrar</a>
+                           <a class="btn btn-oval btn-success" href="/bajas/add" >Agregar</a>
+                           <a class="btn btn-oval btn-success" href="/bajas/edit/{{ $legajo->id }}">Editar</a>
+                           <a class="btn btn-oval btn-danger" href="/bajas/delete">Borrar</a>
                       @endif
                     </div>
 

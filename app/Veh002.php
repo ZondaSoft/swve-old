@@ -4,11 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Veh001 extends Model
+class Veh002 extends Model
 {
     protected $fillable = ['detalle'];
-
-    protected $guarded = ['id','_token' ]; // every field to protect
 
     // Scope usado en las busquedas
     public function scopeName($query, $name)
@@ -29,7 +27,7 @@ class Veh001 extends Model
         //    ->orWhere('detalle', 'LIKE', "%$term%")
         //    ->get();
 
-        return static::select(\DB::raw("CONCAT(detalle,' ',vehiculo)  AS detalle"),'motor',\DB::raw("CONCAT(codigo)"))
+        return static::select(\DB::raw("CONCAT(detalle,' ',vehiculo)  AS detalle"),'domici','cuil','funcion',\DB::raw("CONCAT(codigo)"))
             ->where(\DB::raw("CONCAT(codigo, ' ' ,detalle,' ', vehiculo)"), "LIKE" , "%$term%")
             ->get();
     }

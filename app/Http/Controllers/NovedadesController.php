@@ -242,10 +242,6 @@ class NovedadesController extends Controller
         $legajo->pago_asist = $request->input('pago_asist');
         $legajo->cod_fichad = $request->input('cod_fichad');
         $legajo->formap = $request->input('formap');
-        $legajo->banco = $request->input('banco');
-        $legajo->sucursal = $request->input('sucursal');
-        $legajo->cuenta = $request->input('cuenta');
-        $legajo->cbu = $request->input('cbu');
 
         $date = str_replace('/', '-', $request->input('fecha_naci'));
         $legajo->fecha_naci = Carbon::createFromFormat("d-m-Y", $date);

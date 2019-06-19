@@ -25,7 +25,7 @@
 <div class="modal fade" id="myModalLarge" name="myModalLarge" tabindex="-2" role="dialog" aria-labelledby="myModalLabelLarge" aria-hidden="true">
   <div class="modal-dialog modal-lg">
 
-    <form method="post" action="{{ url('/novedadeslist/add') }}" enctype="multipart/form-data">
+    <form method="post" action="{{ url('/rto/add') }}" enctype="multipart/form-data">
 
     {{ csrf_field() }}
 

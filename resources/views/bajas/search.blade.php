@@ -4,13 +4,13 @@
 
    <!-- Page content-->
    <div class="content-heading">
-      <div>Buscar
+      <div>Buscar vehiculos de Baja
          <small>Resultados de la búsqueda y filtrado</small>
       </div>
    </div>
    <div class="row">
       <div class="col-lg-9">
-        {!! Form::open(['route' => 'home.search' , 'method' => 'GET' , 'class' => 'form-group mb-4' , 'role' => 'search']) !!}
+        {!! Form::open(['route' => 'bajas.search' , 'method' => 'GET' , 'class' => 'form-group mb-4' , 'role' => 'search']) !!}
 
            <!-- <input class="form-control mb-2" type="text" placeholder="Texto a buscar..." autofocus=""> -->
            {!! Form::text('name', null, ['class'=>'form-control mb-2', 'placeholder'=>'Texto a buscar...' , 'Value' => $name , 'autocomplete' => 'off', 'autofocus'] ) !!}
@@ -45,9 +45,6 @@
                       <strong>Dominio</strong>
                     </th>
                     <th>
-                      <strong>Vehículo</strong>
-                    </th>
-                    <th>
                       <strong>Detalle</strong>
                     </th>
                     <th>
@@ -67,19 +64,6 @@
                                 <div class="media-body d-flex">
                                    <div>
                                       <h5 class="m-0">{{ $legajo?$legajo->dominio:'' }}</h5>
-                                   </div>
-                                </div>
-                             </div>
-                          </td>
-
-                          <td>
-                             <div class="media align-items-center">
-                                <!-- <a class="mr-3" href="#">
-                                   <img class="img-fluid rounded thumb64" src="{{ asset('img/dummy.png') }}" alt="">
-                                </a> -->
-                                <div class="media-body d-flex">
-                                   <div>
-                                      <h5 class="m-0">{{ $legajo?$legajo->vehiculo:'' }}</h5>
                                    </div>
                                 </div>
                              </div>
@@ -114,8 +98,8 @@
                               <div class="media align-items-center">
                                  <div class="media-body d-flex">
                                     <div class="ml-auto">
-                                       <a class="btn btn-info btn-sm" href="\home\{{ $legajo->id }}" >
-                                       Ver...</a>
+                                       <a class="btn btn-info btn-sm" href="\bajas\{{ $legajo->id }}" >
+                                       Ver vehiculo...</a>
                                     </div>
                                  </div>
                               </div>

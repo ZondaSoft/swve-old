@@ -259,7 +259,7 @@
                   <!-- END user info-->
                   <!-- Iterates over all sidebar items-->
                   <li class="nav-heading">
-                     <span data-localize="">Archivos</span>  <!-- data-localize="sidebar.heading.HEADER" -->
+                     <span data-localize="">Vehículos</span>  <!-- data-localize="sidebar.heading.HEADER" -->
                   </li>
                   <li class=" {{ $active==1?'active':' ' }} ">
                      <a href="/home" title="Legajos" title="legajos">
@@ -276,7 +276,26 @@
                      </a>
                   </li>
 
+                  <li class=" ">
+                     <a href="#layout" title="Parámetros especiales del sistema" data-toggle="collapse">
+                        <em class="icon-layers"></em>
+                        <span>Parámetros ...</span>
+                     </a>
+                     <ul class="sidebar-nav sidebar-subnav collapse {{ ($active>=3 and $active<=22)?'show':' ' }}" id="layout">
+                        <li class="sidebar-subnav-header">Layouts</li>
+                        <li class=" {{ $active==7?'active':' ' }} ">
+                           <a href="/tipos" title="Tipos de Vehículos">
+                              <span>Tipos de Vehículos</span>
+                           </a>
+                        </li>
+                     </ul>
+                  </li>
 
+
+                  <li class="nav-heading">
+                     <span data-localize="sidebar.heading.COMPONENTS">Novedades</span>
+                     <!-- Novedades -->
+                  </li>
 
 
                   <li class=" ">

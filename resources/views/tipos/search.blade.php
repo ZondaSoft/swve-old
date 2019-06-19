@@ -4,13 +4,13 @@
 
    <!-- Page content-->
    <div class="content-heading">
-      <div>Buscar
+      <div>Buscar Bancos
          <small>Resultados de la búsqueda y filtrado</small>
       </div>
    </div>
    <div class="row">
       <div class="col-lg-9">
-        {!! Form::open(['route' => 'home.search' , 'method' => 'GET' , 'class' => 'form-group mb-4' , 'role' => 'search']) !!}
+        {!! Form::open(['route' => 'tipos.search' , 'method' => 'GET' , 'class' => 'form-group mb-4' , 'role' => 'search']) !!}
 
            <!-- <input class="form-control mb-2" type="text" placeholder="Texto a buscar..." autofocus=""> -->
            {!! Form::text('name', null, ['class'=>'form-control mb-2', 'placeholder'=>'Texto a buscar...' , 'Value' => $name , 'autocomplete' => 'off', 'autofocus'] ) !!}
@@ -36,99 +36,52 @@
             <div class="card-header">
                <a class="float-right" href="#" data-tool="panel-refresh" data-toggle="tooltip" title="Refresh Card">
                   <em class="fa fa-refresh"></em>
-               </a>Search Results</div>
+               </a>Resultados de la búsqueda</div>
             <!-- START table-responsive-->
             <div class="table-responsive">
                <table class="table table-striped table-bordered table-hover">
                   <thead>
-                    <th>
-                      <strong>Dominio</strong>
-                    </th>
-                    <th>
-                      <strong>Vehículo</strong>
-                    </th>
-                    <th>
-                      <strong>Detalle</strong>
-                    </th>
-                    <th>
-                      <strong>Interno</strong>
-                    </th>
 
                   </thead>
                   <tbody>
                      @foreach ($legajos as $legajo)
                         <tr>
 
-                          <td>
-                             <div class="media align-items-center">
-                                <!-- <a class="mr-3" href="#">
-                                   <img class="img-fluid rounded thumb64" src="{{ asset('img/dummy.png') }}" alt="">
-                                </a> -->
-                                <div class="media-body d-flex">
-                                   <div>
-                                      <h5 class="m-0">{{ $legajo?$legajo->dominio:'' }}</h5>
-                                   </div>
-                                </div>
-                             </div>
-                          </td>
-
-                          <td>
-                             <div class="media align-items-center">
-                                <!-- <a class="mr-3" href="#">
-                                   <img class="img-fluid rounded thumb64" src="{{ asset('img/dummy.png') }}" alt="">
-                                </a> -->
-                                <div class="media-body d-flex">
-                                   <div>
-                                      <h5 class="m-0">{{ $legajo?$legajo->vehiculo:'' }}</h5>
-                                   </div>
-                                </div>
-                             </div>
-                          </td>
-
-                          <td>
-                             <div class="media align-items-center">
-                                <!-- <a class="mr-3" href="#">
-                                   <img class="img-fluid rounded thumb64" src="{{ asset('img/dummy.png') }}" alt="">
-                                </a> -->
-                                <div class="media-body d-flex">
-                                   <div>
-                                      <h5 class="m-0">{{ $legajo?$legajo->detalle:'' }}</h5>
-                                   </div>
-                                </div>
-                             </div>
-                          </td>
-
-                          <td>
-                             <div class="media align-items-center">
-                                <!-- <a class="mr-3" href="#">
-                                   <img class="img-fluid rounded thumb64" src="{{ asset('img/dummy.png') }}" alt="">
-                                </a> -->
-                                <div class="media-body d-flex">
-                                   <div>
-                                      <h5 class="m-0">{{ $legajo?$legajo->codigo:'' }}</h5>
-                                   </div>
-                                </div>
-                             </div>
-                          </td>
-                          <td>
+                           <td>
                               <div class="media align-items-center">
                                  <div class="media-body d-flex">
-                                    <div class="ml-auto">
-                                       <a class="btn btn-info btn-sm" href="\home\{{ $legajo->id }}" >
-                                       Ver...</a>
+                                    <div>
+                                       <h4 class="m-0">{{ $legajo->codigo }}</h4>
                                     </div>
                                  </div>
                               </div>
                            </td>
+
+                           <td>
+                              <div class="media align-items-center">
+                                 <div class="media-body d-flex">
+                                    <div>
+                                       <h4 class="m-0">{{ $legajo->detalle }}</h4>
+                                    </div>
+                                    <div class="ml-auto">
+                                       <a class="btn btn-info btn-sm" href="\tipos\{{ $legajo->id }}" >
+                                       Ver detalles</a>
+                                    </div>
+                                 </div>
+                              </div>
+                           </td>
+
                         </tr>
                      @endforeach
                   </tbody>
                </table>
+
+
             </div>
             <!-- END table-responsive-->
             <div class="card-footer">
                <div class="d-flex">
-                  <button class="btn btn-sm btn-secondary">Clear</button>
+                  <!-- <button class="btn btn-sm btn-secondary">Clear</button> -->
                   <nav class="ml-auto">
                      <ul class="pagination pagination-sm">
                         {{ $legajos->links() }}
