@@ -68,7 +68,7 @@
                       <label class="col-form-label">Operario</label>
                       <input class="form-control" type="text" name="encarga" id="encarga"
                         disabled
-                        value="{{ $novedad->encarga }}" autocomplete='off'>
+                        value="" autocomplete='off'>
                  </div>
 
                  <!-- <div class="col-lg-1 mb-1" style="padding-top: 35px; max-width: 50px">
