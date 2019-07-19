@@ -216,7 +216,12 @@ Route::post('/multas/delete_drop/{id}', 'MultasController@delete_drop'); // ->na
 Route::get('/estadisticas', 'EstadisticasController@index')->where('id', '[0-9]+');
 
 // Rutas de informes (novedades)
-Route::get('/infvehiculo', 'InfNovedController@index'); // ->name('home');
+Route::get('/infvehiculo/', 'InfNovedController@index'); // ->name('home');
+Route::post('/infvehiculo/print', 'InfNovedController@printpdf');  // Total General por empresa
+Route::post('/infvehiculo/print2', 'InfNovedController@printpdf2');  // Total General por empresa
+Route::post('/infvehiculo/print3', 'InfNovedController@printpdf');  // Total General por empresa
+
+// Rutas de informes (novedades)
 Route::get('/infnovedades', 'InfNovedController@novedades'); // ->name('home');
 Route::get('/infembargos', 'InfNovedController@embargos'); // ->name('home');
 Route::get('/inffichadas', 'InfNovedController@fichadas'); // ->name('home');

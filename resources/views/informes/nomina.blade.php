@@ -4,7 +4,7 @@
 
 @section('content')
 
-<form method="post" action="{{ url('/ausentismo/print') }}" enctype="multipart/form-data" id="formMain" name="formMain">
+<form method="post" action="{{ url('/infvehiculo/print') }}" enctype="multipart/form-data" id="formMain" name="formMain">
 
 {{ csrf_field() }}
 
@@ -46,21 +46,37 @@
                   <div class="form-row">
                     <div class="col-lg-4 mb-3">
                        <label class="col-form-label">Desde Vehículo</label>
-                       <select class="form-control" id="empresa" name="empresa">
+                       <select class="form-control" id="vehiculo" name="vehiculo">
                          @foreach ($legajos as $legajo)
-                             <option value = "{{ old('empresa',$legajo->codigo) }}">
+                             <option value = "{{ old('vehiculo',$legajo->codigo) }}">
                                {{ $legajo->codigo  }} - {{ $legajo->detalle }} {{ $legajo->nombres }}
+                             </option>
+                         @endforeach
+                       </select>
+
+                       <select class="form-control" id="vehiculob" name="vehiculob" style="display: none;">
+                         @foreach ($legajosb as $legajob)
+                             <option value = "{{ old('vehiculo',$legajo->codigo) }}">
+                               {{ $legajob->codigo  }} - {{ $legajob->detalle }} {{ $legajob->nombres }}
                              </option>
                          @endforeach
                        </select>
                      </div>
 
                      <div class="col-lg-4 mb-3">
-                        <label class="col-form-label" id="lblempresa2">Hasta Vehículo</label>
-                        <select class="form-control" id="empresa2" name="empresa2">
+                        <label class="col-form-label" id="lblvehiculo2">Hasta Vehículo</label>
+                        <select class="form-control" id="vehiculo2" name="vehiculo2">
                           @foreach ($legajos as $legajo)
-                              <option value = "{{ old('empresa2',$legajo->codigo) }}">
+                              <option value = "{{ old('vehiculo2',$legajo->codigo) }}">
                                 {{ $legajo->codigo  }} - {{ $legajo->detalle }} {{ $legajo->nombres }}
+                              </option>
+                          @endforeach
+                        </select>
+
+                        <select class="form-control" id="vehiculob2" name="vehiculob2" style="display: none;">
+                          @foreach ($legajosb as $legajob)
+                              <option value = "{{ old('vehiculo2',$legajo->codigo) }}">
+                                {{ $legajob->codigo  }} - {{ $legajob->detalle }} {{ $legajob->nombres }}
                               </option>
                           @endforeach
                         </select>
@@ -78,15 +94,11 @@
                               <input id="RadioOpcion" type="number" name="RadioOpcion" value=1 hidden>
 
                               <label class="c-radio">
-                                 <input id="inlineradio1" type="radio" name="inlineradio1" value="1" checked onclick="hideEmpresa1(this)" onselect="hideEmpresa1(this)">
+                                 <input id="inlineradio1" type="radio" name="inlineradio1" value="1" checked onclick="VActivos(this)" onselect="hideEmpresa1(this)">
                                  <span class="fa fa-circle"></span>Vehículos Activos</label>
                                <label class="c-radio">
-                                  <input id="inlineradio1" type="radio" name="inlineradio1" value="2" onclick="hideEmpresa2(this)" onselect="hideEmpresa2(this)">
+                                  <input id="inlineradio1" type="radio" name="inlineradio1" value="2" onclick="VBajas(this)" onselect="hideEmpresa2(this)">
                                   <span class="fa fa-circle"></span>Vehículos de Baja&nbsp;&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                               <label class="c-radio">
-                                  <input id="inlineradio1" type="radio" name="inlineradio1" value="3" onclick="hideEmpresa3(this)" onselect="hideEmpresa2(this)">
-                                  <span class="fa fa-circle"></span>Ambos&nbsp;&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
                             </div>
                       </div>
                     </div>
@@ -158,46 +170,56 @@
 <script type="text/javascript">
 
     // Total x empresa
-    function hideEmpresa1(e) {
+    function VActivos(e) {
+        document.getElementById('vehiculo').style.display = 'block';
+        document.getElementById('vehiculo2').style.display = 'block';
+
+        document.getElementById('vehiculob').style.display = 'none';
+        document.getElementById('vehiculob2').style.display = 'none';
+
         //$("#empresa2").val("1").trigger("change");
-        document.getElementById('lblempresa2').style.display = 'block';
-        document.getElementById('empresa2').style.display = 'block';
-        //document.getElementById('lnkimprimir').href="{{ url('/ausentismo/print') }}";
-        //document.getElementById('lnkimprimir2').href="{{ url('/ausentismo/print') }}";
-        document.getElementById('formMain').action="{{ url('/ausentismo/print') }}";
+        //document.getElementById('lblempresa2').style.display = 'block';
+        //document.getElementById('empresa2').style.display = 'block';
+        //document.getElementById('lnkimprimir').href="{{ url('/infvehiculo/print') }}";
+        //document.getElementById('lnkimprimir2').href="{{ url('/infvehiculo/print') }}";
+        document.getElementById('formMain').action="{{ url('/infvehiculo/print') }}";
         document.getElementById('RadioOpcion').value=1;
     }
 
     // Detallado x empleado
-    function hideEmpresa2(e) {
-        document.getElementById('lblempresa2').style.display = 'none';
-        document.getElementById('empresa2').style.display = 'none';
-        //document.getElementById('lnkimprimir').href="{{ url('/ausentismo/print2') }}";
-        //document.getElementById('lnkimprimir2').href="{{ url('/ausentismo/print2') }}";
-        document.getElementById('formMain').action="{{ url('/ausentismo/print2') }}";
+    function VBajas(e) {
+        document.getElementById('vehiculo').style.display = 'none';
+        document.getElementById('vehiculo2').style.display = 'none';
+
+        document.getElementById('vehiculob').style.display = 'block';
+        document.getElementById('vehiculob2').style.display = 'block';
+        //document.getElementById('empresa2').style.display = 'none';
+        //document.getElementById('lnkimprimir').href="{{ url('/infvehiculo/print2') }}";
+        //document.getElementById('lnkimprimir2').href="{{ url('/infvehiculo/print2') }}";
+        document.getElementById('formMain').action="{{ url('/infvehiculo/print2') }}";
         document.getElementById('RadioOpcion').value=2;
     }
 
     // Detallado x parte
-    function hideEmpresa3(e) {
-        document.getElementById('lblempresa2').style.display = 'none';
-        document.getElementById('empresa2').style.display = 'none';
-        //document.getElementById('lnkimprimir').href="{{ url('/ausentismo/print2') }}";
-        //document.getElementById('lnkimprimir2').href="{{ url('/ausentismo/print2') }}";
-        document.getElementById('formMain').action="{{ url('/ausentismo/print3') }}";
+    function VAmbos(e) {
+        document.getElementById('vehiculob2').style.display = 'none';
+        //document.getElementById('empresa2').style.display = 'none';
+        //document.getElementById('lnkimprimir').href="{{ url('/infvehiculo/print2') }}";
+        //document.getElementById('lnkimprimir2').href="{{ url('/infvehiculo/print2') }}";
+        document.getElementById('formMain').action="{{ url('/infvehiculo/print3') }}";
         document.getElementById('RadioOpcion').value=3;
     }
 
     // Salida del informe a PDF
     function pdfexport(e) {
         if (document.getElementById('RadioOpcion').value == 1) {
-            document.getElementById('formMain').action="{{ url('/ausentismo/print') }}";
+            document.getElementById('formMain').action="{{ url('/infvehiculo/print') }}";
         }
         if (document.getElementById('RadioOpcion').value == 2) {
-            document.getElementById('formMain').action="{{ url('/ausentismo/print2') }}";
+            document.getElementById('formMain').action="{{ url('/infvehiculo/print2') }}";
         }
         if (document.getElementById('RadioOpcion').value == 3) {
-            document.getElementById('formMain').action="{{ url('/ausentismo/print3') }}";
+            document.getElementById('formMain').action="{{ url('/infvehiculo/print3') }}";
         }
     }
 
@@ -209,13 +231,13 @@
         //document.getElementById('lnkimprimir2').href="{{ url('/ausentismo/print2') }}";
         //alert(document.getElementById('formMain').action);
         if (document.getElementById('RadioOpcion').value == 1) {
-            document.getElementById('formMain').action="{{ url('/ausentismo/excel') }}";
+            document.getElementById('formMain').action="{{ url('/infvehiculo/excel') }}";
         }
         if (document.getElementById('RadioOpcion').value == 2) {
-            document.getElementById('formMain').action="{{ url('/ausentismo/excel2') }}";
+            document.getElementById('formMain').action="{{ url('/infvehiculo/excel2') }}";
         }
         if (document.getElementById('RadioOpcion').value == 3) {
-            document.getElementById('formMain').action="{{ url('/ausentismo/excel3') }}";  // Total x empresa
+            document.getElementById('formMain').action="{{ url('/infvehiculo/excel3') }}";  // Total x empresa
         }
     }
 

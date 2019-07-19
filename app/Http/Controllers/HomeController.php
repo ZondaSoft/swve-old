@@ -254,6 +254,12 @@ class HomeController extends Controller
 
     public function edit($id)
     {
+        $legajoNew = new Veh010;
+
+        $legajoNew->fecha = Carbon::parse(Carbon::now())->format('d/m/Y');
+        $legajoNew->vencimient = Carbon::parse(new Carbon('next year'))->format('d/m/Y');
+        $legajoNew->importe = 0.00;
+
         // return "Mostrar form de edit $id";
         $legajo = Veh001::find($id);
         $agregar = False;
@@ -262,11 +268,57 @@ class HomeController extends Controller
 
         $legajo->f_alta = Carbon::parse($legajo->f_alta)->format('d/m/Y');
 
-        $novedades = Veh010::orderBy('detalle')->paginate(8);
-        $siniestros = Veh010::orderBy('detalle')->where('tipo','Siniestros')->paginate(8);
-        $tipos  = Veh007::orderBy('detalle')->get();
+        // Datos de tablas anexas
+        $novedades  = Veh010::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8); // RTO
+        $multas     = Veh011::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $siniestros = Veh012::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $siniestrosTer = Veh015::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $tipos      = Veh007::orderBy('codigo')->get();
+        $baja       = Veh025::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->first();
 
-        return view('home')->with(compact('legajo','agregar','edicion','active','tipos','novedades','siniestros'));    // Abrir form de modificacion
+        if ($baja != null) {
+          if ($baja->fecha != null) {
+            $baja->fecha = Carbon::parse($baja->fecha)->format('d/m/Y');
+          }
+        }
+
+        $comprador = Veh027::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->first();
+        $libreDM   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',1)->first();
+        if ($libreDM != null) {
+            $libreDM->fecha = Carbon::parse($libreDM->fecha)->format('d/m/Y');
+        }
+        $libreDP   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',2)->first();
+        if ($libreDP != null) {
+            $libreDP->fecha = Carbon::parse($libreDP->fecha)->format('d/m/Y');
+        }
+        $dominio   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',3)->first();
+        if ($dominio != null) {
+            $dominio->fecha = Carbon::parse($dominio->fecha)->format('d/m/Y');
+        }
+        $denuncia   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',4)->first();
+        if ($denuncia != null) {
+            $denuncia->fecha = Carbon::parse($denuncia->fecha)->format('d/m/Y');
+        }
+        $policial   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',5)->first();
+        if ($policial != null) {
+            $policial->fecha = Carbon::parse($policial->fecha)->format('d/m/Y');
+        }
+        $ceta   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',6)->first();
+        if ($ceta != null) {
+            $ceta->fecha = Carbon::parse($ceta->fecha)->format('d/m/Y');
+        }
+        $f381   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',10)->first();
+        if ($f381 != null) {
+            $f381->fecha = Carbon::parse($f381->fecha)->format('d/m/Y');
+        }
+        $dnrpa   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',11)->first();
+        if ($dnrpa != null) {
+            $dnrpa->fecha = Carbon::parse($dnrpa->fecha)->format('d/m/Y');
+        }
+
+
+        return view('home')->with(compact('legajo','agregar','edicion','active','tipos','novedades','siniestros',
+          'multas','tipos','legajoNew','siniestrosTer','baja','comprador','libreDM','libreDP','dominio','denuncia','policial','ceta','f381','dnrpa'));    // Abrir form de modificacion
     }
 
 
