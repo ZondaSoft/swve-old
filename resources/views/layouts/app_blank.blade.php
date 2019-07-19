@@ -23,7 +23,7 @@
     <!-- Angle -->
     <meta name="description" content="SWNov (Sistema web de Novedades)">
     <meta name="keywords" content="SWNov, Novedades personal, sueldos">
-    
+
     <!-- =============== VENDOR STYLES ===============-->
     <!-- FONT AWESOME-->
     <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">
@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" id="bscss">
     <!-- =============== APP STYLES ===============-->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" id="maincss">
+    <link rel="stylesheet" href="{{ asset('css/theme-h.css') }}" id="maincss">
 </head>
 <body>
     <!-- Angle -->
@@ -59,10 +60,10 @@
             </div>
             <!-- END navbar header-->
             <!-- START Left navbar-->
-            
+
             <!-- END Left navbar-->
             <!-- START Right Navbar-->
-            
+
             <!-- END Right Navbar-->
             <!-- START Search form-->
             <form class="navbar-form" role="search" action="search.html">
@@ -76,7 +77,7 @@
          </nav>
          <!-- END Top Navbar-->
       </header>
-      
+
       <!-- offsidebar-->
       <aside class="offsidebar d-none">
          <!-- START Off Sidebar (right)-->
@@ -430,13 +431,13 @@
       <section class="section-container">
          <!-- Page content-->
          <div class="content-wrapper">
-            
-            
+
+
             <!-- END row-->
             <!-- START row-->
             <!-- <div class="row"> -->
                <!-- <div class="col-lg-12"> -->
-                  
+
 
 
                     <!-- Codigo pre-existente -->
@@ -459,7 +460,7 @@
       </footer>
    </div>
 
-    
+
 
     <!-- =============== Angle->VENDOR SCRIPTS ===============-->
     <!-- MODERNIZR-->

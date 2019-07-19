@@ -44,9 +44,9 @@
               </span>Cancelar
            </a>
       @else
-           <a class="btn btn-oval btn-success" href="/bajas/add" >Agregar</a>
+           <!-- <a class="btn btn-oval btn-success" href="/bajas/add" >Agregar</a>
            <a class="btn btn-oval btn-success" href="/bajas/edit/{{ $legajo->id }}">Editar</a>
-           <a class="btn btn-oval btn-danger" href="/bajas/delete">Borrar</a>
+           <a class="btn btn-oval btn-danger" href="/bajas/delete">Borrar</a> -->
       @endif
     </div>
 </div>
@@ -821,153 +821,164 @@
                =========================================================-->
                <div class="card card-default mb-1 border-info">
                       <div class="card-header bg-info" id="headingSeven">
-                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" href="">Baja</a>
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" href="">Venta o Baja</a>
                        </h5>
                       </div>
                       <div class="collapse" id="collapseSeven" aria-labelledby="headingSeven" data-parent="#accordion">
                          <div class="card-body border-top">
 
-                            <div class="col-md-10">
-                               <div class="form-row">
-                                 <!-- START table-responsive-->
-                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover">
-                                       <thead>
-                                         <th>
-                                           <strong>Fecha</strong>
-                                         </th>
-                                         <th style="width: 500px">
-                                           <strong>Tipo de novedad</strong>
-                                         </th>
-                                         <th>
-                                           <strong>Encargado</strong>
-                                         </th>
-                                         <th style="width: 800px">
-                                           <strong>
-                                             Detalle
-                                           </strong>
-                                         </th>
-                                         <th>
-                                           <strong>
-                                             Vencimiento
-                                           </strong>
-                                         </th>
-                                         <th width="1%"></th>
-                                         <th></th>
-                                         <th></th>
-                                       </thead>
-                                       <tbody>
-                                          @foreach ($novedades as $novedad)
-                                             <tr>
+                            <div class="col-md-12">
+                              <!-- START list group-->
+                              <div class="list-group mb-0">
+                                   @if($baja == null)
+                                      <a title="Realizar venta o baja" class="list-group-item list-group-item-action"
+                                        type="button" data-toggle="modal" data-target="#myModalbaja"
+                                        href="#">
+                                        <span class="badge badge-purple float-right">Sin datos</span>
+                                   @else
+                                      <a title="Realizar venta o baja" class="list-group-item list-group-item-action"
+                                          type="button" data-toggle=""
+                                          href="#" onclick="showModalEditbaja({{ $legajo->id }})">
+                                      <span class="badge badge-green float-right">Proceso de {{ $baja->tipo_baja }} iniciado el {{ $baja->fecha }}</span>
+                                   @endif
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->fecha :'' }}
-                                                        </div>
-                                                     </div>
-                                                  </div>
-                                               </td>
+                                   @if($baja != null)
+                                       @if($baja->tipo_baja == 'Venta')
+                                              <em class="fa fa-fw fa-truck mr-2"></em>Datos de Venta</a>
+                                              @if($comprador != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditcomprador({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $comprador->comprador }}</span>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action"
+                                                    data-toggle="modal" data-target="#myModalcomprador" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                              @endif
+                                              <em class="fa fa-fw fa-user mr-2"></em>Datos del comprador</a>
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->tipo :'' }}
-                                                        </div>
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->encarga:'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->detalle:'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->vencimient :'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                   <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
-                                                     type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                     <em class="fa fa-eye"></em></a>
-                                                 </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Editar novedad" class="btn btn-warning btn-sm" onclick="showModalEdit({{ $novedad->id }})">
-                                                    <em class="fa fa-pencil" style="color: white"></em></a>
-
-                                                    <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                                      type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                      <em class="fa fa-sticky-note"></em>
-                                                       Editar
-                                                    </button>  -->
-                                                 </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                      <em class="fa fa-trash" style="color: white"></em></a>
-                                                    <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
-                                                    <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                      <em class="fa fa-trash" style="color: red"></em>
-                                                    </a> -->
-                                                 </div>
-                                               </td>
-
-                                             </tr>
-                                          @endforeach
-                                       </tbody>
-                                    </table>
-                                 </div>
-                                 <!-- END table-responsive-->
-                                 <div class="card-footer">
-                                    <div class="d-flex">
-                                       <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
-
-                                       <nav class="ml-auto">
-                                          <ul class="pagination pagination-sm">
-                                             {{ $novedades->links() }}
-                                          </ul>
-                                       </nav>
-                                    </div>
-
-                                    <fieldset></fieldset>
+                                              @if($libreDM != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditlibreDM({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $libreDM->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Libre deuda de multas</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalLibreDM" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Libre deuda de multas</a>
+                                              @endif
 
 
-                                   </div>
-                                </div>
-                             </div>
+                                              @if($libreDP != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditlibreDP({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $libreDP->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Libre deuda patentes</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalLibreDP" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Libre deuda patentes</a>
+                                              @endif
+
+                                              @if($dominio != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditDominio({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $dominio->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Informe de dominio</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalDominio" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Informe de dominio</a>
+                                              @endif
+
+                                              @if($denuncia != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditDenuncia({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $denuncia->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Denuncia de venta</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalDenuncia" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Denuncia de venta</a>
+                                              @endif
+
+
+                                              @if($policial != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditPolicial({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $policial->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Verificación policial</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalPolicial" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Verificación policial</a>
+                                              @endif
+
+                                              @if($ceta != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditCeta({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $ceta->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Formulario CETA</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalCeta" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Formulario CETA</a>
+                                              @endif
+
+                                            <!--
+                                            <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                              href="#" onclick="confirmarVenta({{ $legajo->id }})">
+                                              <span class="badge badge-purple float-right">Sin datos</span>
+                                              <em class="fa fa-fw fa-square-o mr-2"></em>Finalizar Venta</a> -->
+                                        @else
+                                            <em class="fa fa-fw fa-truck mr-2"></em>Datos de Baja</a>
+
+                                            @if($f381 != null)
+                                                <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                  href="#" onclick="showModalEditF381({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $f381->fecha }}</span>
+                                                  <em class="fa fa-fw fa-check mr-2"></em>Formulario 381</a>
+                                            @else
+                                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalF381" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                                  <em class="fa fa-fw fa-square-o mr-2"></em>Formulario 381</a>
+                                            @endif
+
+                                            @if($policial != null)
+                                                <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                  href="#" onclick="showModalEditPolicial({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $policial->fecha }}</span>
+                                                  <em class="fa fa-fw fa-check mr-2"></em>Verificación policial</a>
+                                            @else
+                                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalPolicial" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                                  <em class="fa fa-fw fa-square-o mr-2"></em>Verificación policial</a>
+                                            @endif
+
+                                            @if($dnrpa != null)
+                                                <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                  href="#" onclick="showModalEditDNRPA({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $dnrpa->fecha }}</span>
+                                                  <em class="fa fa-fw fa-check mr-2"></em>Formulario 13 de la DNRPA</a>
+                                            @else
+                                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalDNRPA" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                                  <em class="fa fa-fw fa-square-o mr-2"></em>Formulario 13 de la DNRPA</a>
+                                            @endif
+
+                                            <!--
+                                            <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                              href="#" onclick="confirmarBaja({{ $legajo->id }})">
+                                               <span class="badge badge-purple float-right">Sin datos</span>
+                                               <em class="fa fa-fw fa-square-o mr-2"></em>Finalizar Baja</a> -->
+                                        @endif
+                                    @else
+                                        <em class="fa fa-fw fa-truck mr-2"></em>Datos de Venta o Baja</a>
+                                    @endif
+                              </div>
+                              <!-- END list group
+                              <div class="card-footer text-right"><a class="btn btn-secondary btn-sm" href="#">View All Activity</a>
+                              </div> -->
+                            </div>
                          </div>
                       </div>
                </div>
@@ -985,9 +996,9 @@
                              </span>Cancelar
                            </a>
                       @else
-                           <a class="btn btn-oval btn-success" href="/bajas/add" >Agregar</a>
+                           <!-- <a class="btn btn-oval btn-success" href="/bajas/add" >Agregar</a>
                            <a class="btn btn-oval btn-success" href="/bajas/edit/{{ $legajo->id }}">Editar</a>
-                           <a class="btn btn-oval btn-danger" href="/bajas/delete">Borrar</a>
+                           <a class="btn btn-oval btn-danger" href="/bajas/delete">Borrar</a> -->
                       @endif
                     </div>
 
@@ -1003,19 +1014,1177 @@
 </form>
 
 <script type="text/javascript">
-  $(function() {
-    $( "#datepicker" ).datepicker({
-      changeMonth: true,
-      autoclose: true,
-      changeYear: true
-    });
-  });
+      $(function() {
+        $( "#datepicker" ).datepicker({
+          changeMonth: true,
+          autoclose: true,
+          changeYear: true
+        });
+      });
 
-  $(document).ready(function()
-  {
-    // id de nuestro modal
-    $("#myModalLarge").modal("show");
-  });
+      $(document).ready(function() {
+        // id de nuestro modal
+        $("#myModalLarge").modal("show");
+      });
+
+
+
+  function showModalsBorrar(e) {
+      //alert(e);
+      var punto = e;
+
+      $.ajax({
+              url: "/siniestros/delete/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "POST",
+              success: function(result)
+              {
+                if (result['result'] == 'ok')
+                  {
+                      swal("El siniestro no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                  }
+                  else
+                  {
+                      swal({
+                            title: "Está seguro(a) ?",
+                            text: "Está a punto de eliminar el siniestro!  # " + punto,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Si, eliminar !",
+                            closeOnConfirm: false
+                        },
+                        function() {
+                          $.ajax({
+                                  url: "/siniestros/delete_drop/" + punto,
+                                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                                  dataType: "json",
+                                  method: "POST",
+                                  success: function(result)
+                                  {
+                                      if (result['result'] != 'ok') // Era ==
+                                      {
+                                          swal("El siniestro no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                      }
+                                      else
+                                      {
+                                          swal("Eliminado!", "El siniestro fue eliminado.", "success");
+
+                                          location.reload();
+                                      }
+                                  },
+                                  fail: function(){
+                                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                                  },
+                                  beforeSend: function(){
+
+                                  }
+                              });
+
+                            swal("Eliminado!", "La novedad fue eliminada.", "success");
+                        })
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+      }
+
+
+  function showModalEdits(e) {
+    var punto = e;
+    var id = e;
+
+    $.ajax({
+            url: "/siniestros/edit/" + punto,
+            data: "id="+punto+"&_token={{ csrf_token()}}",
+            dataType: "json",
+            method: "GET",
+            success: function(result)
+            {
+                if (result['result'] == 'ok')
+                {
+                    swal("El siniestro no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                }
+                else
+                {
+                    //console.log(result);
+                    //alert(result.novedad2);
+                    var $id = result.id;
+                    $("#nid").val(result.id);
+                    $("#sin_edit_encarga").val(result.encarga);
+                    $("#nro_siniestro_edit").val(result.nro_siniestro);
+                    $("#sin_fecha_edit").val(result.fecha);
+                    $("#sin_ed_comenta").val(result.detalle);
+                    $("#sin-edit").attr("action","/siniestros/edit/" + punto);
+
+                    // alert("/novedadeslist/edit/" + punto);
+
+                    $('#myModalEditS').modal('show');
+                }
+            },
+            fail: function(){
+                swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+            },
+            beforeSend: function(){
+
+            }
+        });
+    }
+
+
+
+
+    function showModalEditR(e) {
+      //alert(e);
+      var punto = e;
+      var id = e;
+
+      $.ajax({
+              url: "/rto/edit/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "GET",
+              success: function(result)
+              {
+                  if (result['result'] == 'ok')
+                  {
+                      swal("La novedad no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                  }
+                  else
+                  {
+                      //console.log(result);
+                      //alert(result.novedad2);
+                      var $id = result.id;
+                      $("#nid").val(result.id);
+                      $("#legajoEdit").val(result.legajo);
+                      $("#ApynomEdit").val(result.detalle);
+                      $("#rto_edit_encarga").val(result.encarga);
+                      $("#rto_fechaEdit").val(result.fecha);
+                      $("#rto_fechaEdit2").val(result.vencimient);
+                      $("#rto_ed_comenta").val(result.detalle);
+
+                      $("#myModalEdit").attr("action","/rto/edit/" + punto);
+
+                      // alert("/novedadeslist/edit/" + punto);
+
+                      $('#myModalEdit').modal('show');
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
+
+
+      function showModalrBorrar(e) {
+        //alert(e);
+        var punto = e;
+
+        $.ajax({
+                url: "/rto/delete/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "POST",
+                success: function(result)
+                {
+                  if (result['result'] == 'ok')
+                    {
+                        swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    }
+                    else
+                    {
+                        swal({
+                              title: "Está seguro(a) ?",
+                              text: "Está a punto de eliminar la R.T.O. !  # " + punto,
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Si, eliminar !",
+                              closeOnConfirm: false
+                          },
+                          function() {
+                            $.ajax({
+                                    url: "/rto/delete_drop/" + punto,
+                                    data: "id="+punto+"&_token={{ csrf_token()}}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    success: function(result)
+                                    {
+                                        if (result['result'] != 'ok') // Era ==
+                                        {
+                                            swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                        }
+                                        else
+                                        {
+                                            swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    fail: function(){
+                                        swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                                    },
+                                    beforeSend: function(){
+
+                                    }
+                                });
+
+                              swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+                          })
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la R.T.O. ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+
+    function showModalmBorrar(e) {
+        //alert(e);
+        var punto = e;
+
+        $.ajax({
+                url: "/rto/delete/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "POST",
+                success: function(result)
+                {
+                  if (result['result'] == 'ok')
+                    {
+                        swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    }
+                    else
+                    {
+                        swal({
+                              title: "Está seguro(a) ?",
+                              text: "Está a punto de eliminar la R.T.O.!  # " + punto,
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Si, eliminar !",
+                              closeOnConfirm: false
+                          },
+                          function() {
+                            $.ajax({
+                                    url: "/rto/delete_drop/" + punto,
+                                    data: "id="+punto+"&_token={{ csrf_token()}}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    success: function(result)
+                                    {
+                                        if (result['result'] != 'ok') // Era ==
+                                        {
+                                            swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                        }
+                                        else
+                                        {
+                                            swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    fail: function(){
+                                        swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la R.T.O. ...");
+                                    },
+                                    beforeSend: function(){
+
+                                    }
+                                });
+
+                              swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+                          })
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la R.T.O. ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+    function showModalEditT(e) {
+      var punto = e;
+      var id = e;
+
+      $.ajax({
+              url: "/sinies3/edit/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "GET",
+              success: function(result)
+              {
+                  if (result['result'] == 'ok')
+                  {
+                      swal("El siniestro no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                  }
+                  else
+                  {
+                      //console.log(result);
+                      //alert(result.novedad2);
+                      var $id = result.id;
+                      $("#nid").val(result.id);
+                      $("#sint_edit_encarga").val(result.encarga);
+                      $("#nro_siniestro_edit").val(result.nro_siniestro);
+                      $("#sinT_fecha_edit").val(result.fecha);
+                      $("#aseguradora_edit").val(result.cia);
+                      $("#estadoT_edit").val(result.estado);
+                      $("#sinT_ed_comenta").val(result.detalle);
+                      $("#sinT-edit").attr("action","/sinies3/edit/" + punto);
+
+                      //alert("/sinies3/edit/" + punto);
+
+                      $('#myModalEditT').modal('show');
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
+
+
+    function showModaltBorrar(e) {
+
+        //alert(e);
+        var punto = e;
+
+        $.ajax({
+                url: "/sinies3/delete/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "POST",
+                success: function(result)
+                {
+                  if (result['result'] == 'ok')
+                    {
+                        swal("El siniestro recibido no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    }
+                    else
+                    {
+                        swal({
+                              title: "Está seguro(a) ?",
+                              text: "Está a punto de eliminar el siniestro recibido!  # " + punto,
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Si, eliminar !",
+                              closeOnConfirm: false
+                          },
+                          function() {
+                            $.ajax({
+                                    url: "/sinies3/delete_drop/" + punto,
+                                    data: "id="+punto+"&_token={{ csrf_token()}}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    success: function(result)
+                                    {
+                                        if (result['result'] != 'ok') // Era ==
+                                        {
+                                            swal("El siniestro recibido no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                        }
+                                        else
+                                        {
+                                            swal("Eliminado!", "El siniestro recibido fue eliminado.", "success");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    fail: function(){
+                                        swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el siniestro recibido...");
+                                    },
+                                    beforeSend: function(){
+
+                                    }
+                                });
+
+                              swal("Eliminado!", "La novedad fue eliminada.", "success");
+                          })
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+    function showModalEditm(e) {
+      var punto = e;
+      var id = e;
+
+      $.ajax({
+              url: "/multas/edit/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "GET",
+              success: function(result)
+              {
+                  if (result['result'] == 'ok')
+                  {
+                      swal("La multa no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                  }
+                  else
+                  {
+                      //console.log(result);
+                      //alert(result.novedad2);
+                      var $id = result.id;
+                      $("#nid").val(result.id);
+                      $("#multa_edit_encarga").val(result.encarga);
+                      $("#multa_ed_importe").val(result.importe);
+                      $("#multa_fecha_edit").val(result.fecha);
+                      $("#multa_ed_fecha_pgo").val(result.fecha_pago);
+                      $("#multa_ed_comenta").val(result.detalle);
+                      $("#multa_ed_form").attr("action","/multas/edit/" + punto);
+
+                      // alert("/novedadeslist/edit/" + punto);
+
+                      $('#myModalEditM').modal('show');
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
+
+
+      function showModalmBorrar(e) {
+          //alert(e);
+          var punto = e;
+
+          $.ajax({
+                  url: "/multas/delete/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "POST",
+                  success: function(result)
+                  {
+                    if (result['result'] == 'ok')
+                      {
+                          swal("La multa no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                      }
+                      else
+                      {
+                          swal({
+                                title: "Está seguro(a) ?",
+                                text: "Está a punto de eliminar la multa!  # " + punto,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, eliminar !",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                              $.ajax({
+                                      url: "/multas/delete_drop/" + punto,
+                                      data: "id="+punto+"&_token={{ csrf_token()}}",
+                                      dataType: "json",
+                                      method: "POST",
+                                      success: function(result)
+                                      {
+                                          if (result['result'] != 'ok') // Era ==
+                                          {
+                                              swal("La multa no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                          }
+                                          else
+                                          {
+                                              swal("Eliminado!", "La multa fue eliminada.", "success");
+
+                                              location.reload();
+                                          }
+                                      },
+                                      fail: function(){
+                                          swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+                                      },
+                                      beforeSend: function(){
+
+                                      }
+                                  });
+
+                                swal("Eliminado!", "La multa fue eliminada.", "success");
+                            })
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+      function showModalEditbaja(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/baja_venta/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("La multa no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+                        //alert(result.novedad2);
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#ventas_ed_fecha").val(result.fecha);
+                        $("#ventas_ed_tipo").val(result.tipo_baja);
+                        $("#ventas_ed_detalle").val(result.detalle);
+                        $("#ventas_ed_form").attr("action","/baja_venta/edit/" + $id);
+
+                        // alert("/novedadeslist/edit/" + punto);
+
+                        $('#myModalbajaedit').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+      }
+
+      //----------------------------------
+      //    Modificacion de comprador
+      //----------------------------------
+      function showModalEditcomprador(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/comprador/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("La multa no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#comprador_ed").val(result.comprador);
+                        $("#domic_ed").val(result.domic);
+                        $("#email_ed").val(result.email);
+                        $("#telefono_ed1").val(result.telefono1);
+                        $("#telefono_ed2").val(result.telefono2);
+                        $("#comprad_ed_form").attr("action","/comprador/edit/" + $id);
+
+                        $('#myModalCompradoredit').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+      //------------------------------------------
+      // Modificacion de libre deudas de multas
+      //------------------------------------------
+      function showModalEditlibreDM(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/libredmultas/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("El libre deuda de multas no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#libredm_ed_fecha").val(result.fecha);
+                        $("#libredm_ed_detalle").val(result.detalle);
+                        $("#libredm_ed_form").attr("action","/libredmultas/edit/" + $id);
+
+                        $('#myModalLibreDM_ed').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el libre deuda de multas ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+      //------------------------------------------
+      // Modificacion de libre deudas de multas
+      //------------------------------------------
+      function showModalEditlibreDP(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/libredpatente/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("El libre deuda de patente no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#libredp_ed_fecha").val(result.fecha);
+                        $("#libredp_ed_detalle").val(result.detalle);
+                        $("#libredp_ed_form").attr("action","/libredpatente/edit/" + $id);
+
+                        $('#myModalLibreDP_ed').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el libre deuda de patente ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+        //------------------------------------------
+        // Modificacion de libre deudas de multas
+        //------------------------------------------
+        function showModalEditlibreDP(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/libredpatente/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El libre deuda de patente no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#libredp_ed_fecha").val(result.fecha);
+                          $("#libredp_ed_detalle").val(result.detalle);
+                          $("#libredp_ed_form").attr("action","/libredpatente/edit/" + $id);
+
+                          $('#myModalLibreDP_ed').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el libre deuda de patente ...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        // Modificacion de Infome de Dominio
+        //------------------------------------------
+        function showModalEditDominio(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/dominio/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El informe de dominio no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#dominio_ed_fecha").val(result.fecha);
+                          $("#dominio_ed_detalle").val(result.detalle);
+                          $("#dominio_ed_form").attr("action","/dominio/edit/" + $id);
+
+                          $('#myModalDominioEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el informe de dominio...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+
+        //------------------------------------------
+        // Modificacion de Denuncia de venta
+        //------------------------------------------
+        function showModalEditDenuncia(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/denuncia/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("La denuncia de venta no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#denuncia_ed_fecha").val(result.fecha);
+                          $("#denuncia_ed_detalle").val(result.detalle);
+                          $("#denuncia_ed_form").attr("action","/denuncia/edit/" + $id);
+
+                          $('#myModalDenunciaEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la denuncia de ventas...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+
+        //------------------------------------------
+        // Modificacion de Denuncia de venta
+        //------------------------------------------
+        function showModalEditPolicial(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/policial/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("La Verificación policial no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#policial_ed_fecha").val(result.fecha);
+                          $("#policial_ed_detalle").val(result.detalle);
+                          $("#policial_ed_form").attr("action","/policial/edit/" + $id);
+
+                          $('#myModalPolicialEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la Verificación Policial...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+
+        //------------------------------------------
+        // Modificacion de form. CETA
+        //------------------------------------------
+        function showModalEditCeta(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/ceta/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El formulario CETA no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#ceta_ed_fecha").val(result.fecha);
+                          $("#ceta_ed_detalle").val(result.detalle);
+                          $("#ceta_ed_form").attr("action","/ceta/edit/" + $id);
+
+                          $('#myModalCetaEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el form. CETA ...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        //       Confirmacion de Vta
+        //------------------------------------------
+        function confirmarVenta(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/vender/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "POST",
+                  success: function(result)
+                  {
+                    if (result['result'] == 'ok')
+                      {
+                          swal("No se puede confirmar la venta del vehiculo !", "Contiene datos pendientes o incorrectos, corrijalos antes de poder confirmarla ...")
+                      }
+                      else
+                      {
+                          swal({
+                                title: "Está seguro(a) de cerrar la venta ?",
+                                text: "Está a punto de confirmar la venta del vehículo!  # " + punto,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, confirmar !",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                              $.ajax({
+                                      url: "/vender/confirmar/" + punto,
+                                      data: "id="+punto+"&_token={{ csrf_token()}}",
+                                      dataType: "json",
+                                      method: "POST",
+                                      success: function(result)
+                                      {
+                                          if (result['result'] != 'ok') // Era ==
+                                          {
+                                              swal("El vehículo no puede venderse !", "Contiene datos pendientes, borrelas antes de poder continuar...")
+                                          }
+                                          else
+                                          {
+                                              swal("Eliminado!", "El vehículo fue eliminado.", "success");
+
+                                              location.reload();
+                                          }
+                                      },
+                                      fail: function(){
+                                          swal("Error !", "Existen datos pendientes, antes de poder realizar la venta ...");
+                                      },
+                                      beforeSend: function(){
+
+                                      }
+                                  });
+
+                                swal("Eliminado!", "El Vehiculo fue vendido.", "success");
+                            })
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        // Modificacion de form. CETA
+        //------------------------------------------
+        function showModalEditF381(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/f381/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El formulario CETA no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#f381_ed_fecha").val(result.fecha);
+                          $("#f381_ed_detalle").val(result.detalle);
+                          $("#f381_ed_form").attr("action","/f381/edit/" + $id);
+
+                          $('#myModalF381Edit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el form. CETA ...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+        //------------------------------------------
+        // Modificacion de Denuncia de venta
+        //------------------------------------------
+        function showModalEditDNRPA(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/dnrpa/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El Formulario F13 no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#dnrpa_ed_fecha").val(result.fecha);
+                          $("#dnrpa_ed_detalle").val(result.detalle);
+                          $("#dnrpa_ed_form").attr("action","/dnrpa/edit/" + $id);
+
+                          $('#myModalDNRPAEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la Verificación Policial...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        //       Confirmacion de Baja
+        //------------------------------------------
+        function confirmarBaja(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/baja_otros/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "POST",
+                  success: function(result)
+                  {
+                    if (result['result'] == 'ok')
+                      {
+                          swal("No se puede confirmar la baja del vehiculo !", "Contiene datos pendientes o incorrectos, corrijalos antes de poder confirmarla ...")
+                      }
+                      else
+                      {
+                          swal({
+                                title: "Está seguro(a)?",
+                                text: "Está a punto de confirmar la baja del vehículo!  # " + punto,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, confirmar !",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                              $.ajax({
+                                      url: "/baja_otros/confirmar/" + punto,
+                                      data: "id="+punto+"&_token={{ csrf_token()}}",
+                                      dataType: "json",
+                                      method: "POST",
+                                      success: function(result)
+                                      {
+                                          if (result['result'] != 'ok') // Era ==
+                                          {
+                                              swal("El vehículo no puede ser dado de Baja !", "Contiene datos pendientes, borrelas antes de poder continuar...")
+                                          }
+                                          else
+                                          {
+                                              swal("Eliminado!", "El vehículo fue eliminado.", "success");
+
+                                              location.reload();
+                                          }
+                                      },
+                                      fail: function(){
+                                          swal("Error !", "Existen datos pendientes, antes de poder eliminar la novedad...");
+                                      },
+                                      beforeSend: function(){
+
+                                      }
+                                  });
+
+                                swal("Eliminado!", "El Vehiculo fue vendido.", "success");
+                            })
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
 </script>
 
 @endsection
+
+
+@include('novedadeslist.sini3-create')
+@include('novedadeslist.sini3-edit')
+@include('novedadeslist.rto-create')
+@include('novedadeslist.rto-edit')
+@include('novedadeslist.multa-create')
+@include('novedadeslist.multa-edit')
+@include('novedadeslist.sini-create')
+@include('novedadeslist.sini-edit')
+@include('novedadeslist.baja-create')
+@include('novedadeslist.baja-edit')
+@include('novedadeslist.comprador-create')
+@include('novedadeslist.comprador-edit')
+@include('novedadeslist.libredm-create')
+@include('novedadeslist.libredm-edit')
+@include('novedadeslist.libredp-create')
+@include('novedadeslist.libredp-edit')
+@include('novedadeslist.dominio-create')
+@include('novedadeslist.dominio-edit')
+@include('novedadeslist.denuncia-create')
+@include('novedadeslist.denuncia-edit')
+@include('novedadeslist.policial-create')
+@include('novedadeslist.policial-edit')
+@include('novedadeslist.ceta-create')
+@include('novedadeslist.ceta-edit')
+@include('novedadeslist.f381-create')
+@include('novedadeslist.f381-edit')
+@include('novedadeslist.dnrpa-create')
+@include('novedadeslist.dnrpa-edit')

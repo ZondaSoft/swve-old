@@ -8,12 +8,24 @@ use App\Veh001;
 use App\Veh002;
 use App\Veh007;
 use App\Veh010;
+use App\Veh011;
+use App\Veh012;
+use App\Veh015; // Siniestros de terceros
+use App\Veh025;   // Inicio venta
+use App\Veh026;
+use App\Veh027; // Comprador
 
 class BajasController extends Controller
 {
     // Indice inicial de CRUD de Legajos de Baja
     public function index($id = null, $direction = null)
     {
+        $legajoNew = new Veh010;
+
+        //$legajoNew->fecha = Carbon::parse(Carbon::now())->format('d/m/Y');
+        //$legajoNew->vencimient = Carbon::parse(new Carbon('next year'))->format('d/m/Y');
+        //$legajoNew->importe = 0.00;
+
         if ($id == null) {
               $legajo = Veh002::first();
 
@@ -61,10 +73,55 @@ class BajasController extends Controller
         $legajo->f_alta = Carbon::parse($legajo->f_alta)->format('d/m/Y');
 
         // Combos de tablas anexas
-        $novedades   = Veh010::orderBy('detalle')->paginate(8);
+        $novedades   = Veh010::orderBy('detalle')->where('dominio',$legajo->dominio)->paginate(8);
+        $multas     = Veh011::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $siniestros = Veh012::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $siniestrosTer = Veh015::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
         $tipos      = Veh007::orderBy('codigo')->get();
+        $baja       = Veh025::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->first();
 
-        return view('bajas.index')->with(compact('legajo','agregar','edicion','tipos','active','novedades'));;
+        if ($baja != null) {
+          if ($baja->fecha != null) {
+            $baja->fecha = Carbon::parse($baja->fecha)->format('d/m/Y');
+          }
+        }
+
+        $comprador = Veh027::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->first();
+        $libreDM   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',1)->first();
+        if ($libreDM != null) {
+            $libreDM->fecha = Carbon::parse($libreDM->fecha)->format('d/m/Y');
+        }
+        $libreDP   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',2)->first();
+        if ($libreDP != null) {
+            $libreDP->fecha = Carbon::parse($libreDP->fecha)->format('d/m/Y');
+        }
+        $dominio   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',3)->first();
+        if ($dominio != null) {
+            $dominio->fecha = Carbon::parse($dominio->fecha)->format('d/m/Y');
+        }
+        $denuncia   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',4)->first();
+        if ($denuncia != null) {
+            $denuncia->fecha = Carbon::parse($denuncia->fecha)->format('d/m/Y');
+        }
+        $policial   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',5)->first();
+        if ($policial != null) {
+            $policial->fecha = Carbon::parse($policial->fecha)->format('d/m/Y');
+        }
+        $ceta   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',6)->first();
+        if ($ceta != null) {
+            $ceta->fecha = Carbon::parse($ceta->fecha)->format('d/m/Y');
+        }
+        $f381   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',10)->first();
+        if ($f381 != null) {
+            $f381->fecha = Carbon::parse($f381->fecha)->format('d/m/Y');
+        }
+        $dnrpa   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',11)->first();
+        if ($dnrpa != null) {
+            $dnrpa->fecha = Carbon::parse($dnrpa->fecha)->format('d/m/Y');
+        }
+
+        return view('bajas.index')->with(compact('legajo','agregar','edicion','active','novedades','siniestros',
+            'multas','tipos','legajoNew','siniestrosTer','baja','comprador','libreDM','libreDP','dominio','denuncia','policial','ceta','f381','dnrpa'));;
     }
 
 
@@ -207,5 +264,150 @@ class BajasController extends Controller
         $name = $request->get('name');
 
         return view('bajas.search')->with(compact('legajos','active','name'));
+    }
+
+    public function vender($id)
+    {
+        // return "Mostrar form de edit $id";
+        $dominio = Veh001::find($id)->dominio;
+
+        if ($dominio != null) {
+            $venta = Veh025::where('dominio', '=', $dominio)->first();
+
+            if ($venta == null) {
+                return "{\"result\":\"ok\",\"id\":\"$id\"}";
+            } else {
+                if ($venta->tipo_baja != 'Venta') {
+                    return "{\"result\":\"ok\",\"id\":\"$id\"}";
+                }
+            }
+
+            $legajo = Veh026::where('dominio', '=', $dominio)->where('tramite',5)->first();
+
+            //$legajo->fecha = Carbon::parse($legajo->fecha)->format('d/m/Y');
+        } else {
+            $legajo = null;
+        }
+
+        return "false";
+    }
+
+
+    public function vender_confirma($id)
+    {
+        // return "Mostrar form de edit $id";
+        $dominio = Veh001::find($id);
+
+        if ($dominio != null) {
+            $baja = new Veh002();
+            //$request->all();
+            //$baja = Veh001::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
+
+            $baja->dominio= $dominio->dominio;
+            $baja->codigo = $dominio->codigo;
+            $baja->detalle= $dominio->detalle;
+            $baja->domic  = $dominio->domic;
+            $baja->encargado = $dominio->encargado;
+            $baja->depos  = $dominio->depos;
+            $baja->modelo = $dominio->modelo;
+            $baja->anio   = $dominio->anio;
+            $baja->motor = $dominio->motor;
+            $baja->chasis = $dominio->chasis;
+            $baja->titulo_ori = $dominio->titulo_ori;
+            $baja->modelo2 = $dominio->modelo2;
+            $baja->estado = $dominio->estado;
+            $baja->inscripto = $dominio->inscripto;
+            $baja->numero = $dominio->numero;
+            $baja->municipal = $dominio->municipal;
+            $baja->pin = $dominio->pin;
+            $baja->vto_ruta = $dominio->vto_ruta;
+            $baja->equipo = $dominio->equipo;
+            $baja->modelo_eq = $dominio->modelo_eq;
+            $baja->f_alta = $dominio->f_alta;
+            $baja->f_baja = Carbon::today();
+
+            $baja->save();   // INSERT INTO - SQL
+
+            $dominio->delete();
+        } else {
+            $legajo = null;
+
+            return "false";
+        }
+
+        return "{\"result\":\"ok\",\"id\":\"$id\"}";
+    }
+
+
+    public function baja_otros($id)
+    {
+        // return "Mostrar form de edit $id";
+        $dominio = Veh001::find($id)->dominio;
+
+        if ($dominio != null) {
+            $venta = Veh025::where('dominio', '=', $dominio)->first();
+
+            if ($venta == null) {
+                return "{\"result\":\"ok\",\"id\":\"$id\"}";
+            } else {
+                if ($venta->tipo_baja == 'Venta') {
+                    return "{\"result\":\"ok\",\"id\":\"$id\"}";
+                }
+            }
+
+            $legajo = Veh026::where('dominio', '=', $dominio)->where('tramite',10)->first();
+
+            //$legajo->fecha = Carbon::parse($legajo->fecha)->format('d/m/Y');
+        } else {
+            $legajo = null;
+        }
+
+        return "false";
+    }
+
+
+    public function baja_otros_confirma($id)
+    {
+        // return "Mostrar form de edit $id";
+        $dominio = Veh001::find($id);
+
+        if ($dominio != null) {
+            $baja = new Veh002();
+            //$request->all();
+            //$baja = Veh001::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
+
+            $baja->dominio= $dominio->dominio;
+            $baja->codigo = $dominio->codigo;
+            $baja->detalle= $dominio->detalle;
+            $baja->domic  = $dominio->domic;
+            $baja->encargado = $dominio->encargado;
+            $baja->depos  = $dominio->depos;
+            $baja->modelo = $dominio->modelo;
+            $baja->anio   = $dominio->anio;
+            $baja->motor = $dominio->motor;
+            $baja->chasis = $dominio->chasis;
+            $baja->titulo_ori = $dominio->titulo_ori;
+            $baja->modelo2 = $dominio->modelo2;
+            $baja->estado = $dominio->estado;
+            $baja->inscripto = $dominio->inscripto;
+            $baja->numero = $dominio->numero;
+            $baja->municipal = $dominio->municipal;
+            $baja->pin = $dominio->pin;
+            $baja->vto_ruta = $dominio->vto_ruta;
+            $baja->equipo = $dominio->equipo;
+            $baja->modelo_eq = $dominio->modelo_eq;
+            $baja->f_alta = $dominio->f_alta;
+            $baja->f_baja = Carbon::today();
+
+            $baja->save();   // INSERT INTO - SQL
+
+            $dominio->delete();
+        } else {
+            $legajo = null;
+
+            return "false";
+        }
+
+        return "{\"result\":\"ok\",\"id\":\"$id\"}";
     }
 }

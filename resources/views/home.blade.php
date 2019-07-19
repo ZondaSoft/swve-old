@@ -1,6 +1,37 @@
-<!-- Vista de Legajos Activos -->
+<?php
+    # Iniciando la variable de control que permitirá mostrar o no el modal
+    if (isset($_GET['exibirModal'])) {
+      $exibirModal = $_REQUEST['exibirModal'];
+
+    }
+
+    if(!isset($exibirModal)) {
+      $exibirModal = "false";
+    }
+
+    if (isset($_GET['dni']) == true) {
+        $dni=$_GET['dni'];
+    }
+
+    if(!isset($dni)) {
+        $dni = "";
+    }
+
+    if (isset($_GET['cod_nov2']) == true) {
+        $cod_nov=$_GET['cod_nov2'];
+    }
+
+    if(!isset($cod_nov)) {
+        $cod_nov = "";
+    }
+?>
 
 @extends('layouts.app')
+
+@section('styles')
+    <!-- SWEET ALERT-->
+    <link rel="stylesheet" href="/vendor/sweetalert/dist/sweetalert.css">
+@endsection
 
 @section('content')
 
@@ -46,7 +77,7 @@
       @else
            <a class="btn btn-oval btn-success" href="/home/add" >Agregar</a>
            <a class="btn btn-oval btn-success" href="/home/edit/{{ $legajo->id }}">Editar</a>
-           <a class="btn btn-oval btn-danger" href="/home/delete/{{ $legajo->id }}">Borrar</a>
+           <!-- <a class="btn btn-oval btn-danger" href="/home/delete/{{ $legajo->id }}">Borrar</a> -->
       @endif
     </div>
 </div>
@@ -226,6 +257,7 @@
                       </div>
                   </div>
 
+                  <!--
                   <div class="col-xl-10 col-md-10">
                     <div class="form-row">
                         <div class="col-md-5">
@@ -243,7 +275,7 @@
                             @endif
                         </div>
                       </div>
-                  </div>
+                  </div> -->
 
                   <div class="col-xl-10 col-md-10">
                     <div class="form-row">
@@ -437,15 +469,15 @@
 
 
                <!--=======================================================
-               /              Siniestros
+               /              Siniestros propios
                =========================================================-->
                <div class="card card-default mb-1 border-info">
-                      <div class="card-header text-white bg-info" id="headingTwo">
-                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" href="">Siniestros</a>
+                      <div class="card-header text-white bg-info" id="headingNine">
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine" href="">Siniestros propios</a>
                          </h5>
                       </div>
-                      <div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordion">
-                         <div class="col-md-10">
+                      <div class="collapse" id="collapseNine" aria-labelledby="headingNine" data-parent="#accordion">
+                         <div class="col-md-12">
                            <!-- START card-->
                            <div class="col-lg-2 mb-2">
                            </div>
@@ -458,137 +490,117 @@
                                <div class="table-responsive">
                                   <table class="table table-striped table-bordered table-hover">
                                      <thead>
-                                       <th style="width: 100px">
+                                       <th style="width: 300px">
                                          <strong>Fecha</strong>
                                        </th>
-                                       <th style="width: 500px">
-                                         <strong>Tipo de novedad</strong>
+                                       <th style="width: 200px">
+                                         <strong>Nro.Siniestro</strong>
                                        </th>
                                        <th>
                                          <strong>Encargado</strong>
                                        </th>
                                        <th style="width: 800px">
-                                         <strong>
-                                           Detalle
+                                         <strong>Comentarios
                                          </strong>
                                        </th>
-                                       <th>
-                                         <strong>
-                                           Vencimiento
-                                         </strong>
-                                       </th>
-                                       <th width="1%"></th>
                                        <th></th>
                                        <th></th>
                                      </thead>
                                      <tbody>
-                                        @foreach ($siniestros as $novedad)
-                                           <tr>
+                                       @if($siniestros != null)
+                                            @foreach ($siniestros as $novedad)
+                                               <tr>
 
-                                             <td>
-                                                <div class="media align-items-center">
-                                                   <div class="media-body d-flex">
-                                                      <div>
-                                                         {{ $novedad?$novedad->fecha :'' }}
-                                                      </div>
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->fecha :'' }}
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                 </td>
+
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->nro_siniestro :'' }}
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                 </td>
+
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->encarga:'' }}
+                                                          </div>
+
+                                                       </div>
+                                                    </div>
+                                                 </td>
+
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->detalle:'' }}
+                                                          </div>
+
+                                                       </div>
+                                                    </div>
+                                                 </td>
+
+                                                 <td>
+                                                   <div class="ml-auto">
+                                                      <a title="Editar siniestro" class="btn btn-warning btn-sm" onclick="showModalEdits({{ $novedad->id }})">
+                                                      <em class="fa fa-pencil" style="color: white"></em></a>
+
+                                                      <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
+                                                        type="button" data-toggle="modal" data-target="#myModalEdit">
+                                                        <em class="fa fa-sticky-note"></em>
+                                                         Editar
+                                                      </button>  -->
                                                    </div>
-                                                </div>
-                                             </td>
+                                                 </td>
 
-                                             <td>
-                                                <div class="media align-items-center">
-                                                   <div class="media-body d-flex">
-                                                      <div>
-                                                         {{ $novedad?$novedad->tipo :'' }}
-                                                      </div>
+                                                 <td>
+                                                   <div class="ml-auto">
+                                                      <a title="Borrar siniestro" class="btn btn-danger btn-sm" onclick="showModalsBorrar({{ $novedad->id }})">
+                                                        <em class="fa fa-trash" style="color: white"></em></a>
+                                                      <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
+                                                      <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
+                                                        <em class="fa fa-trash" style="color: red"></em>
+                                                      </a> -->
                                                    </div>
-                                                </div>
-                                             </td>
+                                                 </td>
 
-                                             <td>
-                                                <div class="media align-items-center">
-                                                   <div class="media-body d-flex">
-                                                      <div>
-                                                         {{ $novedad?$novedad->encarga:'' }}
-                                                      </div>
-
-                                                   </div>
-                                                </div>
-                                             </td>
-
-                                             <td>
-                                                <div class="media align-items-center">
-                                                   <div class="media-body d-flex">
-                                                      <div>
-                                                         {{ $novedad?$novedad->detalle:'' }}
-                                                      </div>
-
-                                                   </div>
-                                                </div>
-                                             </td>
-
-                                             <td>
-                                                <div class="media align-items-center">
-                                                   <div class="media-body d-flex">
-                                                      <div>
-                                                         {{ $novedad?$novedad->vencimient :'' }}
-                                                      </div>
-
-                                                   </div>
-                                                </div>
-                                             </td>
-
-                                             <td>
-                                               <div class="ml-auto">
-                                                 <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
-                                                   type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                   <em class="fa fa-eye"></em></a>
-                                               </div>
-                                             </td>
-
-                                             <td>
-                                               <div class="ml-auto">
-                                                  <a title="Editar novedad" class="btn btn-warning btn-sm" onclick="showModalEdit({{ $novedad->id }})">
-                                                  <em class="fa fa-pencil" style="color: white"></em></a>
-
-                                                  <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                                    type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                    <em class="fa fa-sticky-note"></em>
-                                                     Editar
-                                                  </button>  -->
-                                               </div>
-                                             </td>
-
-                                             <td>
-                                               <div class="ml-auto">
-                                                  <a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                    <em class="fa fa-trash" style="color: white"></em></a>
-                                                  <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
-                                                  <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                    <em class="fa fa-trash" style="color: red"></em>
-                                                  </a> -->
-                                               </div>
-                                             </td>
-
-                                           </tr>
-                                        @endforeach
+                                               </tr>
+                                            @endforeach
+                                       @endif
                                      </tbody>
                                   </table>
                                </div>
                                <!-- END table-responsive-->
                                <div class="card-footer">
                                   <div class="d-flex">
-                                     <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                       type="button" data-toggle="modal" data-target="#myModal-sinies">
-                                       <em class="fa fa-sticky-note"></em>
-                                        Agregar...
-                                     </button>
+                                     @if($siniestros != null)
+                                       <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
+                                         type="button" data-toggle="modal" data-target="#myModal-sinies">
+                                         <em class="fa fa-sticky-note"></em>
+                                          Agregar siniestros...
+                                       </button>
+                                     @endif
 
                                      <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
 
                                      <nav class="ml-auto">
                                         <ul class="pagination pagination-sm">
-                                           {{ $novedades->links() }}
+                                            @if($siniestros != null)
+                                                {{ $siniestros->links() }}
+                                            @endif
                                         </ul>
                                      </nav>
                                   </div>
@@ -603,54 +615,56 @@
                </div>
 
                <!--=======================================================
-               /              Multas
+               /              Siniestros recibidos por 3ros
                =========================================================-->
                <div class="card card-default mb-1 border-info">
-                      <div class="card-header bg-info" id="headingFour">
-                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" href="">Multas</a>
-                       </h5>
+                      <div class="card-header text-white bg-info" id="headingTwo">
+                          <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" href="">Siniestros recibidos por 3ros.</a>
+                          </h5>
                       </div>
-                      <div class="collapse" id="collapseFour" aria-labelledby="headingFour" data-parent="#accordion">
-                         <div class="card-body border-top">
+                      <div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordion">
+                         <div class="col-md-12">
+                           <!-- START card-->
+                           <div class="col-lg-2 mb-2">
+                           </div>
 
-                            <div class="col-md-10">
-                               <div class="form-row">
-                                 <!-- START table-responsive-->
-                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover">
-                                       <thead style="width: 100px">
-                                         <th>
-                                           <strong>Fecha</strong>
-                                         </th>
-                                         <th style="width: 500px">
-                                           <strong>Tipo de novedad</strong>
-                                         </th>
-                                         <th>
-                                           <strong>Encargado</strong>
-                                         </th>
-                                         <th style="width: 800px">
-                                           <strong>
-                                             Detalle
-                                           </strong>
-                                         </th>
-                                         <th>
-                                           <strong>
-                                             Vencimiento
-                                           </strong>
-                                         </th>
-                                         <th width="1%"></th>
-                                         <th></th>
-                                         <th></th>
-                                       </thead>
-                                       <tbody>
-                                          @foreach ($multas as $multa)
+                            <div class="card card-default">
+                               <!-- <div class="card-header">
+                               </div> -->
+
+                               <!-- START table-responsive-->
+                               <div class="table-responsive">
+                                  <table class="table table-striped table-bordered table-hover">
+                                     <thead>
+                                       <th style="width: 800px">
+                                         <strong>Fecha</strong>
+                                       </th>
+                                       <th style="width: 500px">
+                                         <strong>Nro. Siniestro</strong>
+                                       </th>
+                                       <th>
+                                         <strong>Encargado</strong>
+                                       </th>
+                                       <th style="width: 3000px">
+                                         <strong>Comentarios</strong>
+                                       </th>
+                                       <th style="width: 1000px">
+                                         <strong>Estado</strong>
+                                       </th>
+                                       <th></th>
+                                       <th></th>
+                                     </thead>
+                                     <tbody>
+
+                                       @if($siniestrosTer != null)
+                                          @foreach ($siniestrosTer as $novedad)
                                              <tr>
 
                                                <td>
                                                   <div class="media align-items-center">
                                                      <div class="media-body d-flex">
                                                         <div>
-                                                           {{ $multa?$multa->fecha :'' }}
+                                                           {{ $novedad?$novedad->fecha :'' }}
                                                         </div>
                                                      </div>
                                                   </div>
@@ -660,7 +674,7 @@
                                                   <div class="media align-items-center">
                                                      <div class="media-body d-flex">
                                                         <div>
-                                                           {{ $multa?$multa->tipo :'' }}
+                                                           {{ $novedad?$novedad->nro_siniestro :'' }}
                                                         </div>
                                                      </div>
                                                   </div>
@@ -670,18 +684,7 @@
                                                   <div class="media align-items-center">
                                                      <div class="media-body d-flex">
                                                         <div>
-                                                           {{ $multa?$multa->encarga:'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $multa?$multa->detalle:'' }}
+                                                           {{ $novedad?$novedad->encarga:'' }}
                                                         </div>
 
                                                      </div>
@@ -692,7 +695,18 @@
                                                   <div class="media align-items-center">
                                                      <div class="media-body d-flex">
                                                         <div>
-                                                           {{ $multa?$multa->vencimient :'' }}
+                                                           {{ $novedad?$novedad->detalle:'' }}
+                                                        </div>
+
+                                                     </div>
+                                                  </div>
+                                               </td>
+
+                                               <td>
+                                                  <div class="media align-items-center">
+                                                     <div class="media-body d-flex">
+                                                        <div>
+                                                           {{ $novedad?$novedad->estado:'' }}
                                                         </div>
 
                                                      </div>
@@ -701,15 +715,7 @@
 
                                                <td>
                                                  <div class="ml-auto">
-                                                   <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
-                                                     type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                     <em class="fa fa-eye"></em></a>
-                                                 </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Editar novedad" class="btn btn-warning btn-sm" onclick="showModalEdit({{ $novedad->id }})">
+                                                    <a title="Editar siniestro 3ros." class="btn btn-warning btn-sm" onclick="showModalEditT({{ $novedad->id }})">
                                                     <em class="fa fa-pencil" style="color: white"></em></a>
 
                                                     <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
@@ -722,7 +728,7 @@
 
                                                <td>
                                                  <div class="ml-auto">
-                                                    <a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
+                                                    <a title="Borrar siniestro 3ros." class="btn btn-danger btn-sm" onclick="showModaltBorrar({{ $novedad->id }})">
                                                       <em class="fa fa-trash" style="color: white"></em></a>
                                                     <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
                                                     <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
@@ -733,34 +739,203 @@
 
                                              </tr>
                                           @endforeach
-                                       </tbody>
-                                    </table>
-                                 </div>
-                                 <!-- END table-responsive-->
-                                 <div class="card-footer">
-                                    <div class="d-flex">
+                                       @endif
+
+                                     </tbody>
+                                  </table>
+                               </div>
+                               <!-- END table-responsive-->
+                               <div class="card-footer">
+                                  <div class="d-flex">
+                                     @if($siniestrosTer != null)
+                                         <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
+                                           type="button" data-toggle="modal" data-target="#myModal-sinies3">
+                                           <em class="fa fa-sticky-note"></em>
+                                            Agregar siniestro de 3ros ...
+                                         </button>
+                                     @endif
+
+                                     <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
+
+                                     <nav class="ml-auto">
+                                        <ul class="pagination pagination-sm">
+                                           @if($siniestrosTer != null)
+                                              {{ $siniestrosTer->links() }}
+                                           @endif
+                                        </ul>
+                                     </nav>
+                                  </div>
+                                </div>
+
+                            </div>
+                            <!-- END card-->
+
+                         </div>
+
+                      </div>
+               </div>
+
+
+
+               <!--=======================================================
+               /              Multas
+               =========================================================-->
+               <div class="card card-default mb-1 border-info">
+                      <div class="card-header bg-info" id="headingFour">
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" href="">Multas</a>
+                       </h5>
+                      </div>
+                      <div class="collapse" id="collapseFour" aria-labelledby="headingFour" data-parent="#accordion">
+                        <div class="col-md-12">
+                          <!-- START card-->
+                          <div class="col-lg-2 mb-2">
+                          </div>
+
+                           <div class="card card-default">
+                              <!-- <div class="card-header">
+                              </div> -->
+
+                              <!-- START table-responsive-->
+                              <div class="table-responsive">
+                                 <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <th style="width: 700px">
+                                        <strong>Fecha</strong>
+                                      </th>
+                                      <th>
+                                        <strong>Encargado</strong>
+                                      </th>
+                                      <th style="width: 1800px">
+                                        <strong>Comentarios</strong>
+                                      </th>
+                                      <th style="width: 500px">
+                                        <strong>Importe</strong>
+                                      </th>
+                                      <th style="width: 700px">
+                                        <strong>Fecha de pago</strong>
+                                      </th>
+
+                                      <th></th>
+                                      <th></th>
+                                    </thead>
+                                    <tbody>
+
+                                      @if($multas != null)
+                                         @foreach ($multas as $novedad)
+                                            <tr>
+
+                                              <td>
+                                                 <div class="media align-items-center">
+                                                    <div class="media-body d-flex">
+                                                       <div>
+                                                          {{ $novedad?$novedad->fecha :'' }}
+                                                       </div>
+                                                    </div>
+                                                 </div>
+                                              </td>
+
+                                              <td>
+                                                 <div class="media align-items-center">
+                                                    <div class="media-body d-flex">
+                                                       <div>
+                                                          {{ $novedad?$novedad->encarga :'' }}
+                                                       </div>
+                                                    </div>
+                                                 </div>
+                                              </td>
+
+                                              <td>
+                                                 <div class="media align-items-center">
+                                                    <div class="media-body d-flex">
+                                                       <div>
+                                                          {{ $novedad?$novedad->detalle:'' }}
+                                                       </div>
+
+                                                    </div>
+                                                 </div>
+                                              </td>
+
+                                              <td>
+                                                 <div class="media align-items-center">
+                                                    <div class="media-body d-flex">
+                                                       <div>
+                                                          {{ $novedad?$novedad->importe:'' }}
+                                                       </div>
+
+                                                    </div>
+                                                 </div>
+                                              </td>
+
+                                              <td>
+                                                 <div class="media align-items-center">
+                                                    <div class="media-body d-flex">
+                                                       <div>
+                                                          {{ $novedad?$novedad->fecha_pago:'' }}
+                                                       </div>
+
+                                                    </div>
+                                                 </div>
+                                              </td>
+
+                                              <td>
+                                                <div class="ml-auto">
+                                                   <a title="Editar multa" class="btn btn-warning btn-sm" onclick="showModalEditm({{ $novedad->id }})">
+                                                   <em class="fa fa-pencil" style="color: white"></em></a>
+
+                                                   <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
+                                                     type="button" data-toggle="modal" data-target="#myModalEdit">
+                                                     <em class="fa fa-sticky-note"></em>
+                                                      Editar
+                                                   </button>  -->
+                                                </div>
+                                              </td>
+
+                                              <td>
+                                                <div class="ml-auto">
+                                                   <a title="Borrar multa" class="btn btn-danger btn-sm" onclick="showModalmBorrar({{ $novedad->id }})">
+                                                     <em class="fa fa-trash" style="color: white"></em></a>
+                                                   <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
+                                                   <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
+                                                     <em class="fa fa-trash" style="color: red"></em>
+                                                   </a> -->
+                                                </div>
+                                              </td>
+
+                                            </tr>
+                                         @endforeach
+                                      @endif
+
+                                    </tbody>
+                                 </table>
+                              </div>
+                              <!-- END table-responsive-->
+                              <div class="card-footer">
+                                 <div class="d-flex">
+                                     @if($multas != null)
                                        <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
                                          type="button" data-toggle="modal" data-target="#myModal-multac">
                                          <em class="fa fa-sticky-note"></em>
                                           Agregar multa ...
                                        </button>
+                                     @endif
 
-                                       <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
+                                    <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
 
-                                       <nav class="ml-auto">
-                                          <ul class="pagination pagination-sm">
-                                             {{ $novedades->links() }}
-                                          </ul>
-                                       </nav>
-                                    </div>
+                                    <nav class="ml-auto">
+                                       <ul class="pagination pagination-sm">
+                                          @if($multas != null)
+                                              {{ $multas->links() }}
+                                          @endif
+                                       </ul>
+                                    </nav>
+                                 </div>
+                               </div>
 
-                                    <fieldset></fieldset>
+                           </div>
+                           <!-- END card-->
 
+                        </div>
 
-                                   </div>
-                                </div>
-                             </div>
-                         </div>
                       </div>
                </div>
 
@@ -773,10 +948,13 @@
                        </h5>
                       </div>
                       <div class="collapse" id="collapseFive" aria-labelledby="headingFive" data-parent="#accordion">
-                         <div class="card-body border-top">
+                         <div class="col-md-12">
+                           <!-- START card-->
+                           <div class="col-lg-2 mb-2">
+                           </div>
 
-                            <div class="col-md-10">
-                               <div class="form-row">
+                            <div class="card card-default">
+
                                  <!-- START table-responsive-->
                                  <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover">
@@ -800,127 +978,126 @@
                                              Vencimiento
                                            </strong>
                                          </th>
-                                         <th width="1%"></th>
                                          <th></th>
                                          <th></th>
                                        </thead>
                                        <tbody>
-                                          @foreach ($novedades as $novedad)
-                                             <tr>
+                                         @if($novedades != null)
+                                            @foreach ($novedades as $novedad)
+                                               <tr>
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->fecha :'' }}
-                                                        </div>
-                                                     </div>
-                                                  </div>
-                                               </td>
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->fecha :'' }}
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                 </td>
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->tipo :'' }}
-                                                        </div>
-                                                     </div>
-                                                  </div>
-                                               </td>
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->tipo :'' }}
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                                 </td>
 
-                                               <!-- <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->encarga:'' }}
-                                                        </div>
+                                                 <!-- <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->encarga:'' }}
+                                                          </div>
 
-                                                     </div>
-                                                  </div>
-                                               </td> -->
+                                                       </div>
+                                                    </div>
+                                                 </td> -->
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->detalle:'' }}
-                                                        </div>
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->detalle:'' }}
+                                                          </div>
 
-                                                     </div>
-                                                  </div>
-                                               </td>
+                                                       </div>
+                                                    </div>
+                                                 </td>
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->vencimient :'' }}
-                                                        </div>
+                                                 <td>
+                                                    <div class="media align-items-center">
+                                                       <div class="media-body d-flex">
+                                                          <div>
+                                                             {{ $novedad?$novedad->vencimient :'' }}
+                                                          </div>
 
-                                                     </div>
-                                                  </div>
-                                               </td>
+                                                       </div>
+                                                    </div>
+                                                 </td>
 
-                                               <td>
-                                                 <div class="ml-auto">
-                                                   <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
-                                                     type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                     <em class="fa fa-eye"></em></a>
-                                                 </div>
-                                               </td>
+                                                 <td>
+                                                   <div class="ml-auto">
+                                                      <a title="Editar R.T.O." class="btn btn-warning btn-sm" onclick="showModalEditR({{ $novedad->id }})">
+                                                      <em class="fa fa-pencil" style="color: white"></em></a>
 
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Editar novedad" class="btn btn-warning btn-sm" onclick="showModalEdit({{ $novedad->id }})">
-                                                    <em class="fa fa-pencil" style="color: white"></em></a>
+                                                      <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
+                                                        type="button" data-toggle="modal" data-target="#myModalEdit">
+                                                        <em class="fa fa-sticky-note"></em>
+                                                         Editar
+                                                      </button>  -->
+                                                   </div>
+                                                 </td>
 
-                                                    <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                                      type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                      <em class="fa fa-sticky-note"></em>
-                                                       Editar
-                                                    </button>  -->
-                                                 </div>
-                                               </td>
+                                                 <td>
+                                                   <div class="ml-auto">
+                                                      <a title="Borrar R.T.O." class="btn btn-danger btn-sm" onclick="showModalrBorrar({{ $novedad->id }})">
+                                                        <em class="fa fa-trash" style="color: white"></em></a>
+                                                      <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
+                                                      <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
+                                                        <em class="fa fa-trash" style="color: red"></em>
+                                                      </a> -->
+                                                   </div>
+                                                 </td>
 
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                      <em class="fa fa-trash" style="color: white"></em></a>
-                                                    <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
-                                                    <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                      <em class="fa fa-trash" style="color: red"></em>
-                                                    </a> -->
-                                                 </div>
-                                               </td>
-
-                                             </tr>
-                                          @endforeach
+                                               </tr>
+                                            @endforeach
+                                         @endif
                                        </tbody>
                                     </table>
                                  </div>
                                  <!-- END table-responsive-->
                                  <div class="card-footer">
                                     <div class="d-flex">
-                                       <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                         type="button" data-toggle="modal" data-target="#myModalLarge">
-                                         <em class="fa fa-sticky-note"></em>
-                                          Agregar nueva R.T.O.
-                                       </button>
+                                       @if($novedades != null)
+                                           <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
+                                             type="button" data-toggle="modal" data-target="#myModalLarge">
+                                             <em class="fa fa-sticky-note"></em>
+                                              Agregar nueva R.T.O.
+                                           </button>
+                                       @endif
 
                                        <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
 
                                        <nav class="ml-auto">
                                           <ul class="pagination pagination-sm">
-                                             {{ $novedades->links() }}
+                                             @if($novedades != null)
+                                                {{ $novedades->links() }}
+                                             @endif
                                           </ul>
                                        </nav>
                                     </div>
 
 
                                    </div>
-                                </div>
+
                              </div>
+
                          </div>
+
                       </div>
                </div>
 
@@ -929,159 +1106,162 @@
                =========================================================-->
                <div class="card card-default mb-1 border-info">
                       <div class="card-header bg-info" id="headingSeven">
-                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" href="">Baja</a>
+                         <h5 class="mb-0"><a class="text-inherit collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" href="">Venta o Baja</a>
                        </h5>
                       </div>
                       <div class="collapse" id="collapseSeven" aria-labelledby="headingSeven" data-parent="#accordion">
                          <div class="card-body border-top">
 
-                            <div class="col-md-10">
-                               <div class="form-row">
-                                 <!-- START table-responsive-->
-                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover">
-                                       <thead>
-                                         <th style="width: 100px">
-                                           <strong>Fecha</strong>
-                                         </th>
-                                         <th style="width: 500px">
-                                           <strong>Tipo de novedad</strong>
-                                         </th>
-                                         <th>
-                                           <strong>Encargado</strong>
-                                         </th>
-                                         <th style="width: 800px">
-                                           <strong>
-                                             Detalle
-                                           </strong>
-                                         </th>
-                                         <th>
-                                           <strong>
-                                             Vencimiento
-                                           </strong>
-                                         </th>
-                                         <th width="1%"></th>
-                                         <th></th>
-                                         <th></th>
-                                       </thead>
-                                       <tbody>
-                                          @foreach ($novedades as $novedad)
-                                             <tr>
+                            <div class="col-md-12">
+                              <!-- START list group-->
+                              <div class="list-group mb-0">
+                                   @if($baja == null)
+                                      <a title="Realizar venta o baja" class="list-group-item list-group-item-action"
+                                        type="button" data-toggle="modal" data-target="#myModalbaja"
+                                        href="#">
+                                        <span class="badge badge-purple float-right">Sin datos</span>
+                                   @else
+                                      <a title="Realizar venta o baja" class="list-group-item list-group-item-action"
+                                          type="button" data-toggle=""
+                                          href="#" onclick="showModalEditbaja({{ $legajo->id }})">
+                                      <span class="badge badge-green float-right">Proceso de {{ $baja->tipo_baja }} iniciado el {{ $baja->fecha }}</span>
+                                   @endif
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->fecha :'' }}
-                                                        </div>
-                                                     </div>
-                                                  </div>
-                                               </td>
+                                   @if($baja != null)
+                                       @if($baja->tipo_baja == 'Venta')
+                                              <em class="fa fa-fw fa-truck mr-2"></em>Datos de Venta</a>
+                                              @if($comprador != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditcomprador({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $comprador->comprador }}</span>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action"
+                                                    data-toggle="modal" data-target="#myModalcomprador" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                              @endif
+                                              <em class="fa fa-fw fa-user mr-2"></em>Datos del comprador</a>
 
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->tipo :'' }}
-                                                        </div>
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->encarga:'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->detalle:'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                  <div class="media align-items-center">
-                                                     <div class="media-body d-flex">
-                                                        <div>
-                                                           {{ $novedad?$novedad->vencimient :'' }}
-                                                        </div>
-
-                                                     </div>
-                                                  </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                   <button title="Consultar novedad" class="btn btn-info btn-sm" style="color: white" name="btnAgregar" id="btnAgregar"
-                                                     type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                     <em class="fa fa-eye"></em></a>
-                                                 </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Editar novedad" class="btn btn-warning btn-sm" onclick="showModalEdit({{ $novedad->id }})">
-                                                    <em class="fa fa-pencil" style="color: white"></em></a>
-
-                                                    <!-- <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                                      type="button" data-toggle="modal" data-target="#myModalEdit">
-                                                      <em class="fa fa-sticky-note"></em>
-                                                       Editar
-                                                    </button>  -->
-                                                 </div>
-                                               </td>
-
-                                               <td>
-                                                 <div class="ml-auto">
-                                                    <a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                      <em class="fa fa-trash" style="color: white"></em></a>
-                                                    <!-- <button type="button" data-product_id="{{ $novedad->id }}" data-product_name="{{ $novedad->name }}" class="btn btn-xs btn-default btn-flat" data-toggle="modal" data-target="#confirmDelete"><i class="fa fa-trash"></i></button> -->
-                                                    <!--<a title="Borrar novedad" class="btn btn-danger btn-sm" onclick="showModal({{ $novedad->id }})">
-                                                      <em class="fa fa-trash" style="color: red"></em>
-                                                    </a> -->
-                                                 </div>
-                                               </td>
-
-                                             </tr>
-                                          @endforeach
-                                       </tbody>
-                                    </table>
-                                 </div>
-                                 <!-- END table-responsive-->
-                                 <div class="card-footer">
-                                    <div class="d-flex">
-                                       <button class="btn btn-warning btn-lg" name="btnAgregar" id="btnAgregar"
-                                         type="button" data-toggle="modal" data-target="#myModalLarge">
-                                         <em class="fa fa-sticky-note"></em>
-                                          Agregar...
-                                       </button>
-
-                                       <!-- <a href="#myModalLarge" data-toggle="modal" name="modal1" id="modal1" >abrir</a> -->
-
-                                       <nav class="ml-auto">
-                                          <ul class="pagination pagination-sm">
-                                             {{ $novedades->links() }}
-                                          </ul>
-                                       </nav>
-                                    </div>
-
-                                    <fieldset></fieldset>
+                                              @if($libreDM != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditlibreDM({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $libreDM->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Libre deuda de multas</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalLibreDM" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Libre deuda de multas</a>
+                                              @endif
 
 
-                                   </div>
-                                </div>
-                             </div>
+                                              @if($libreDP != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditlibreDP({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $libreDP->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Libre deuda patentes</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalLibreDP" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Libre deuda patentes</a>
+                                              @endif
+
+                                              @if($dominio != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditDominio({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $dominio->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Informe de dominio</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalDominio" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Informe de dominio</a>
+                                              @endif
+
+                                              @if($denuncia != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditDenuncia({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $denuncia->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Denuncia de venta</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalDenuncia" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Denuncia de venta</a>
+                                              @endif
+
+
+                                              @if($policial != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditPolicial({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $policial->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Verificación policial</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalPolicial" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Verificación policial</a>
+                                              @endif
+
+                                              @if($ceta != null)
+                                                  <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                    href="#" onclick="showModalEditCeta({{ $legajo->id }})">
+                                                    <span class="badge badge-green float-right">{{ $ceta->fecha }}</span>
+                                                    <em class="fa fa-fw fa-check mr-2"></em>Formulario CETA</a>
+                                              @else
+                                                  <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalCeta" href="#">
+                                                    <span class="badge badge-purple float-right">Sin datos</span>
+                                                    <em class="fa fa-fw fa-square-o mr-2"></em>Formulario CETA</a>
+                                              @endif
+
+                                            <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                              href="#" onclick="confirmarVenta({{ $legajo->id }})">
+                                              <span class="badge badge-purple float-right">Sin datos</span>
+                                              <em class="fa fa-fw fa-square-o mr-2"></em>Finalizar Venta</a>
+                                        @else
+                                            <em class="fa fa-fw fa-truck mr-2"></em>Datos de Baja</a>
+
+                                            @if($f381 != null)
+                                                <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                  href="#" onclick="showModalEditF381({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $f381->fecha }}</span>
+                                                  <em class="fa fa-fw fa-check mr-2"></em>Formulario 381</a>
+                                            @else
+                                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalF381" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                                  <em class="fa fa-fw fa-square-o mr-2"></em>Formulario 381</a>
+                                            @endif
+
+                                            @if($policial != null)
+                                                <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                  href="#" onclick="showModalEditPolicial({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $policial->fecha }}</span>
+                                                  <em class="fa fa-fw fa-check mr-2"></em>Verificación policial</a>
+                                            @else
+                                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalPolicial" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                                  <em class="fa fa-fw fa-square-o mr-2"></em>Verificación policial</a>
+                                            @endif
+
+                                            @if($dnrpa != null)
+                                                <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                                  href="#" onclick="showModalEditDNRPA({{ $legajo->id }})">
+                                                  <span class="badge badge-green float-right">{{ $dnrpa->fecha }}</span>
+                                                  <em class="fa fa-fw fa-check mr-2"></em>Formulario 13 de la DNRPA</a>
+                                            @else
+                                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#myModalDNRPA" href="#">
+                                                  <span class="badge badge-purple float-right">Sin datos</span>
+                                                  <em class="fa fa-fw fa-square-o mr-2"></em>Formulario 13 de la DNRPA</a>
+                                            @endif
+
+                                            <a class="list-group-item list-group-item-action" data-toggle="" data-target=""
+                                              href="#" onclick="confirmarBaja({{ $legajo->id }})">
+                                               <span class="badge badge-purple float-right">Sin datos</span>
+                                               <em class="fa fa-fw fa-square-o mr-2"></em>Finalizar Baja</a>
+                                        @endif
+                                    @else
+                                        <em class="fa fa-fw fa-truck mr-2"></em>Datos de Venta o Baja</a>
+                                    @endif
+                              </div>
+                              <!-- END list group
+                              <div class="card-footer text-right"><a class="btn btn-secondary btn-sm" href="#">View All Activity</a>
+                              </div> -->
+                            </div>
                          </div>
                       </div>
                </div>
@@ -1094,7 +1274,28 @@
 </div>
 </form>
 
+@endsection
+
+
+
+@section('scripts')
+<?php
+if($exibirModal === "true") : // Si nuestra variable de control "$exibirModal" es igual a TRUE activa nuestro modal y será visible a nuestro usuario. ?>
+<script>
+  $(document).ready(function()
+  {
+      //var cod_nov = '<?php echo $cod_nov ?>'
+
+      //tipoNovedad2(cod_nov);
+
+      // id de nuestro modal
+      $("#myModalEditS").modal("show");
+  });
+</script>
+<?php endif; ?>
+
 <script type="text/javascript">
+
   $(function() {
     $( "#datepicker" ).datepicker({
       changeMonth: true,
@@ -1103,19 +1304,80 @@
     });
   });
 
-  $(document).ready(function() {
-      // id de nuestro modal
-      $("#myModalLarge").modal("show");
-  });
+  function showModalsBorrar(e) {
+      //alert(e);
+      var punto = e;
+
+      $.ajax({
+              url: "/siniestros/delete/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "POST",
+              success: function(result)
+              {
+                if (result['result'] == 'ok')
+                  {
+                      swal("El siniestro no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                  }
+                  else
+                  {
+                      swal({
+                            title: "Está seguro(a) ?",
+                            text: "Está a punto de eliminar el siniestro!  # " + punto,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Si, eliminar !",
+                            closeOnConfirm: false
+                        },
+                        function() {
+                          $.ajax({
+                                  url: "/siniestros/delete_drop/" + punto,
+                                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                                  dataType: "json",
+                                  method: "POST",
+                                  success: function(result)
+                                  {
+                                      if (result['result'] != 'ok') // Era ==
+                                      {
+                                          swal("El siniestro no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                      }
+                                      else
+                                      {
+                                          swal("Eliminado!", "El siniestro fue eliminado.", "success");
+
+                                          location.reload();
+                                      }
+                                  },
+                                  fail: function(){
+                                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                                  },
+                                  beforeSend: function(){
+
+                                  }
+                              });
+
+                            swal("Eliminado!", "La novedad fue eliminada.", "success");
+                        })
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
 
 
-  function showModalEdit(e) {
-    //alert(e);
+  function showModalEdits(e) {
     var punto = e;
     var id = e;
 
     $.ajax({
-            url: "/rto/edit/" + punto,
+            url: "/siniestros/edit/" + punto,
             data: "id="+punto+"&_token={{ csrf_token()}}",
             dataType: "json",
             method: "GET",
@@ -1123,7 +1385,7 @@
             {
                 if (result['result'] == 'ok')
                 {
-                    swal("La novedad no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    swal("El siniestro no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
                 }
                 else
                 {
@@ -1131,18 +1393,15 @@
                     //alert(result.novedad2);
                     var $id = result.id;
                     $("#nid").val(result.id);
-                    $("#legajoEdit").val(result.legajo);
-                    $("#ApynomEdit").val(result.detalle);
-                    $("#cod_novEdit").val(result.cod_nov);
-                    $("#CodNovNameEdit").val(result.novedad2);
-                    $("#fechaEdit").val(result.fecha);
-                    $("#rto_ed_comenta").val(result.detalle);
-
-                    $("#myModalEdit").attr("action","/rto/edit/" + punto);
+                    $("#sin_edit_encarga").val(result.encarga);
+                    $("#nro_siniestro_edit").val(result.nro_siniestro);
+                    $("#sin_fecha_edit").val(result.fecha);
+                    $("#sin_ed_comenta").val(result.detalle);
+                    $("#sin-edit").attr("action","/siniestros/edit/" + punto);
 
                     // alert("/novedadeslist/edit/" + punto);
 
-                    $('#myModalEdit').modal('show');
+                    $('#myModalEditS').modal('show');
                 }
             },
             fail: function(){
@@ -1152,13 +1411,1060 @@
 
             }
         });
-
     }
+
+
+
+
+    function showModalEditR(e) {
+      //alert(e);
+      var punto = e;
+      var id = e;
+
+      $.ajax({
+              url: "/rto/edit/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "GET",
+              success: function(result)
+              {
+                  if (result['result'] == 'ok')
+                  {
+                      swal("La novedad no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                  }
+                  else
+                  {
+                      //console.log(result);
+                      //alert(result.novedad2);
+                      var $id = result.id;
+                      $("#nid").val(result.id);
+                      $("#legajoEdit").val(result.legajo);
+                      $("#ApynomEdit").val(result.detalle);
+                      $("#rto_edit_encarga").val(result.encarga);
+                      $("#rto_fechaEdit").val(result.fecha);
+                      $("#rto_fechaEdit2").val(result.vencimient);
+                      $("#rto_ed_comenta").val(result.detalle);
+
+                      $("#myModalEdit").attr("action","/rto/edit/" + punto);
+
+                      // alert("/novedadeslist/edit/" + punto);
+
+                      $('#myModalEdit').modal('show');
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
+
+
+      function showModalrBorrar(e) {
+        //alert(e);
+        var punto = e;
+
+        $.ajax({
+                url: "/rto/delete/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "POST",
+                success: function(result)
+                {
+                  if (result['result'] == 'ok')
+                    {
+                        swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    }
+                    else
+                    {
+                        swal({
+                              title: "Está seguro(a) ?",
+                              text: "Está a punto de eliminar la R.T.O. !  # " + punto,
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Si, eliminar !",
+                              closeOnConfirm: false
+                          },
+                          function() {
+                            $.ajax({
+                                    url: "/rto/delete_drop/" + punto,
+                                    data: "id="+punto+"&_token={{ csrf_token()}}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    success: function(result)
+                                    {
+                                        if (result['result'] != 'ok') // Era ==
+                                        {
+                                            swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                        }
+                                        else
+                                        {
+                                            swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    fail: function(){
+                                        swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                                    },
+                                    beforeSend: function(){
+
+                                    }
+                                });
+
+                              swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+                          })
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la R.T.O. ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+
+    function showModalmBorrar(e) {
+        //alert(e);
+        var punto = e;
+
+        $.ajax({
+                url: "/rto/delete/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "POST",
+                success: function(result)
+                {
+                  if (result['result'] == 'ok')
+                    {
+                        swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    }
+                    else
+                    {
+                        swal({
+                              title: "Está seguro(a) ?",
+                              text: "Está a punto de eliminar la R.T.O.!  # " + punto,
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Si, eliminar !",
+                              closeOnConfirm: false
+                          },
+                          function() {
+                            $.ajax({
+                                    url: "/rto/delete_drop/" + punto,
+                                    data: "id="+punto+"&_token={{ csrf_token()}}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    success: function(result)
+                                    {
+                                        if (result['result'] != 'ok') // Era ==
+                                        {
+                                            swal("La R.T.O. no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                        }
+                                        else
+                                        {
+                                            swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    fail: function(){
+                                        swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la R.T.O. ...");
+                                    },
+                                    beforeSend: function(){
+
+                                    }
+                                });
+
+                              swal("Eliminado!", "La R.T.O. fue eliminada.", "success");
+                          })
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la R.T.O. ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+    function showModalEditT(e) {
+      var punto = e;
+      var id = e;
+
+      $.ajax({
+              url: "/sinies3/edit/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "GET",
+              success: function(result)
+              {
+                  if (result['result'] == 'ok')
+                  {
+                      swal("El siniestro no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                  }
+                  else
+                  {
+                      //console.log(result);
+                      //alert(result.novedad2);
+                      var $id = result.id;
+                      $("#nid").val(result.id);
+                      $("#sint_edit_encarga").val(result.encarga);
+                      $("#nro_siniestro_edit").val(result.nro_siniestro);
+                      $("#sinT_fecha_edit").val(result.fecha);
+                      $("#aseguradora_edit").val(result.cia);
+                      $("#estadoT_edit").val(result.estado);
+                      $("#sinT_ed_comenta").val(result.detalle);
+                      $("#sinT-edit").attr("action","/sinies3/edit/" + punto);
+
+                      //alert("/sinies3/edit/" + punto);
+
+                      $('#myModalEditT').modal('show');
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
+
+
+    function showModaltBorrar(e) {
+
+        //alert(e);
+        var punto = e;
+
+        $.ajax({
+                url: "/sinies3/delete/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "POST",
+                success: function(result)
+                {
+                  if (result['result'] == 'ok')
+                    {
+                        swal("El siniestro recibido no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                    }
+                    else
+                    {
+                        swal({
+                              title: "Está seguro(a) ?",
+                              text: "Está a punto de eliminar el siniestro recibido!  # " + punto,
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Si, eliminar !",
+                              closeOnConfirm: false
+                          },
+                          function() {
+                            $.ajax({
+                                    url: "/sinies3/delete_drop/" + punto,
+                                    data: "id="+punto+"&_token={{ csrf_token()}}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    success: function(result)
+                                    {
+                                        if (result['result'] != 'ok') // Era ==
+                                        {
+                                            swal("El siniestro recibido no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                        }
+                                        else
+                                        {
+                                            swal("Eliminado!", "El siniestro recibido fue eliminado.", "success");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    fail: function(){
+                                        swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el siniestro recibido...");
+                                    },
+                                    beforeSend: function(){
+
+                                    }
+                                });
+
+                              swal("Eliminado!", "La novedad fue eliminada.", "success");
+                          })
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+    function showModalEditm(e) {
+      var punto = e;
+      var id = e;
+
+      $.ajax({
+              url: "/multas/edit/" + punto,
+              data: "id="+punto+"&_token={{ csrf_token()}}",
+              dataType: "json",
+              method: "GET",
+              success: function(result)
+              {
+                  if (result['result'] == 'ok')
+                  {
+                      swal("La multa no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                  }
+                  else
+                  {
+                      //console.log(result);
+                      //alert(result.novedad2);
+                      var $id = result.id;
+                      $("#nid").val(result.id);
+                      $("#multa_edit_encarga").val(result.encarga);
+                      $("#multa_ed_importe").val(result.importe);
+                      $("#multa_fecha_edit").val(result.fecha);
+                      $("#multa_ed_fecha_pgo").val(result.fecha_pago);
+                      $("#multa_ed_comenta").val(result.detalle);
+                      $("#multa_ed_form").attr("action","/multas/edit/" + punto);
+
+                      // alert("/novedadeslist/edit/" + punto);
+
+                      $('#myModalEditM').modal('show');
+                  }
+              },
+              fail: function(){
+                  swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+              },
+              beforeSend: function(){
+
+              }
+          });
+
+      }
+
+
+      function showModalmBorrar(e) {
+          //alert(e);
+          var punto = e;
+
+          $.ajax({
+                  url: "/multas/delete/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "POST",
+                  success: function(result)
+                  {
+                    if (result['result'] == 'ok')
+                      {
+                          swal("La multa no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                      }
+                      else
+                      {
+                          swal({
+                                title: "Está seguro(a) ?",
+                                text: "Está a punto de eliminar la multa!  # " + punto,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, eliminar !",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                              $.ajax({
+                                      url: "/multas/delete_drop/" + punto,
+                                      data: "id="+punto+"&_token={{ csrf_token()}}",
+                                      dataType: "json",
+                                      method: "POST",
+                                      success: function(result)
+                                      {
+                                          if (result['result'] != 'ok') // Era ==
+                                          {
+                                              swal("La multa no puede eliminarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el examen...")
+                                          }
+                                          else
+                                          {
+                                              swal("Eliminado!", "La multa fue eliminada.", "success");
+
+                                              location.reload();
+                                          }
+                                      },
+                                      fail: function(){
+                                          swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+                                      },
+                                      beforeSend: function(){
+
+                                      }
+                                  });
+
+                                swal("Eliminado!", "La multa fue eliminada.", "success");
+                            })
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+      function showModalEditbaja(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/baja_venta/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("La multa no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+                        //alert(result.novedad2);
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#ventas_ed_fecha").val(result.fecha);
+                        $("#ventas_ed_tipo").val(result.tipo_baja);
+                        $("#ventas_ed_detalle").val(result.detalle);
+                        $("#ventas_ed_form").attr("action","/baja_venta/edit/" + $id);
+
+                        // alert("/novedadeslist/edit/" + punto);
+
+                        $('#myModalbajaedit').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+      }
+
+      //----------------------------------
+      //    Modificacion de comprador
+      //----------------------------------
+      function showModalEditcomprador(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/comprador/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("La multa no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#comprador_ed").val(result.comprador);
+                        $("#domic_ed").val(result.domic);
+                        $("#email_ed").val(result.email);
+                        $("#telefono_ed1").val(result.telefono1);
+                        $("#telefono_ed2").val(result.telefono2);
+                        $("#comprad_ed_form").attr("action","/comprador/edit/" + $id);
+
+                        $('#myModalCompradoredit').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la multa ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+      //------------------------------------------
+      // Modificacion de libre deudas de multas
+      //------------------------------------------
+      function showModalEditlibreDM(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/libredmultas/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("El libre deuda de multas no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#libredm_ed_fecha").val(result.fecha);
+                        $("#libredm_ed_detalle").val(result.detalle);
+                        $("#libredm_ed_form").attr("action","/libredmultas/edit/" + $id);
+
+                        $('#myModalLibreDM_ed').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el libre deuda de multas ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+      //------------------------------------------
+      // Modificacion de libre deudas de multas
+      //------------------------------------------
+      function showModalEditlibreDP(e) {
+        var punto = e;
+        var id = e;
+
+        $.ajax({
+                url: "/libredpatente/edit/" + punto,
+                data: "id="+punto+"&_token={{ csrf_token()}}",
+                dataType: "json",
+                method: "GET",
+                success: function(result)
+                {
+                    if (result['result'] == 'ok')
+                    {
+                        swal("El libre deuda de patente no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                    }
+                    else
+                    {
+                        //console.log(result);
+
+                        var $id = result.id;
+                        $("#nid").val(result.id);
+                        $("#libredp_ed_fecha").val(result.fecha);
+                        $("#libredp_ed_detalle").val(result.detalle);
+                        $("#libredp_ed_form").attr("action","/libredpatente/edit/" + $id);
+
+                        $('#myModalLibreDP_ed').modal('show');
+                    }
+                },
+                fail: function(){
+                    swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el libre deuda de patente ...");
+                },
+                beforeSend: function(){
+
+                }
+            });
+
+        }
+
+
+        //------------------------------------------
+        // Modificacion de libre deudas de multas
+        //------------------------------------------
+        function showModalEditlibreDP(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/libredpatente/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El libre deuda de patente no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#libredp_ed_fecha").val(result.fecha);
+                          $("#libredp_ed_detalle").val(result.detalle);
+                          $("#libredp_ed_form").attr("action","/libredpatente/edit/" + $id);
+
+                          $('#myModalLibreDP_ed').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el libre deuda de patente ...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        // Modificacion de Infome de Dominio
+        //------------------------------------------
+        function showModalEditDominio(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/dominio/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El informe de dominio no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#dominio_ed_fecha").val(result.fecha);
+                          $("#dominio_ed_detalle").val(result.detalle);
+                          $("#dominio_ed_form").attr("action","/dominio/edit/" + $id);
+
+                          $('#myModalDominioEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el informe de dominio...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+
+        //------------------------------------------
+        // Modificacion de Denuncia de venta
+        //------------------------------------------
+        function showModalEditDenuncia(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/denuncia/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("La denuncia de venta no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#denuncia_ed_fecha").val(result.fecha);
+                          $("#denuncia_ed_detalle").val(result.detalle);
+                          $("#denuncia_ed_form").attr("action","/denuncia/edit/" + $id);
+
+                          $('#myModalDenunciaEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la denuncia de ventas...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+
+        //------------------------------------------
+        // Modificacion de Denuncia de venta
+        //------------------------------------------
+        function showModalEditPolicial(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/policial/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("La Verificación policial no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#policial_ed_fecha").val(result.fecha);
+                          $("#policial_ed_detalle").val(result.detalle);
+                          $("#policial_ed_form").attr("action","/policial/edit/" + $id);
+
+                          $('#myModalPolicialEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la Verificación Policial...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+
+        //------------------------------------------
+        // Modificacion de form. CETA
+        //------------------------------------------
+        function showModalEditCeta(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/ceta/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El formulario CETA no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#ceta_ed_fecha").val(result.fecha);
+                          $("#ceta_ed_detalle").val(result.detalle);
+                          $("#ceta_ed_form").attr("action","/ceta/edit/" + $id);
+
+                          $('#myModalCetaEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el form. CETA ...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        //       Confirmacion de Vta
+        //------------------------------------------
+        function confirmarVenta(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/vender/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "POST",
+                  success: function(result)
+                  {
+                    if (result['result'] == 'ok')
+                      {
+                          swal("No se puede confirmar la venta del vehiculo !", "Contiene datos pendientes o incorrectos, corrijalos antes de poder confirmarla ...")
+                      }
+                      else
+                      {
+                          swal({
+                                title: "Está seguro(a) de cerrar la venta ?",
+                                text: "Está a punto de confirmar la venta del vehículo!  # " + punto,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, confirmar !",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                              $.ajax({
+                                      url: "/vender/confirmar/" + punto,
+                                      data: "id="+punto+"&_token={{ csrf_token()}}",
+                                      dataType: "json",
+                                      method: "POST",
+                                      success: function(result)
+                                      {
+                                          if (result['result'] != 'ok') // Era ==
+                                          {
+                                              swal("El vehículo no puede venderse !", "Contiene datos pendientes, borrelas antes de poder continuar...")
+                                          }
+                                          else
+                                          {
+                                              swal("Eliminado!", "El vehículo fue eliminado.", "success");
+
+                                              location.reload();
+                                          }
+                                      },
+                                      fail: function(){
+                                          swal("Error !", "Existen datos pendientes, antes de poder realizar la venta ...");
+                                      },
+                                      beforeSend: function(){
+
+                                      }
+                                  });
+
+                                swal("Eliminado!", "El Vehiculo fue vendido.", "success");
+                            })
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        // Modificacion de form. CETA
+        //------------------------------------------
+        function showModalEditF381(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/f381/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El formulario CETA no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#f381_ed_fecha").val(result.fecha);
+                          $("#f381_ed_detalle").val(result.detalle);
+                          $("#f381_ed_form").attr("action","/f381/edit/" + $id);
+
+                          $('#myModalF381Edit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar el form. CETA ...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+        //------------------------------------------
+        // Modificacion de Denuncia de venta
+        //------------------------------------------
+        function showModalEditDNRPA(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/dnrpa/edit/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "GET",
+                  success: function(result)
+                  {
+                      if (result['result'] == 'ok')
+                      {
+                          swal("El Formulario F13 no puede editarse !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar ...")
+                      }
+                      else
+                      {
+                          //console.log(result);
+
+                          var $id = result.id;
+                          $("#nid").val(result.id);
+                          $("#dnrpa_ed_fecha").val(result.fecha);
+                          $("#dnrpa_ed_detalle").val(result.detalle);
+                          $("#dnrpa_ed_form").attr("action","/dnrpa/edit/" + $id);
+
+                          $('#myModalDNRPAEdit').modal('show');
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la Verificación Policial...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
+
+
+        //------------------------------------------
+        //       Confirmacion de Baja
+        //------------------------------------------
+        function confirmarBaja(e) {
+          var punto = e;
+          var id = e;
+
+          $.ajax({
+                  url: "/baja_otros/" + punto,
+                  data: "id="+punto+"&_token={{ csrf_token()}}",
+                  dataType: "json",
+                  method: "POST",
+                  success: function(result)
+                  {
+                    if (result['result'] == 'ok')
+                      {
+                          swal("No se puede confirmar la baja del vehiculo !", "Contiene datos pendientes o incorrectos, corrijalos antes de poder confirmarla ...")
+                      }
+                      else
+                      {
+                          swal({
+                                title: "Está seguro(a)?",
+                                text: "Está a punto de confirmar la baja del vehículo!  # " + punto,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Si, confirmar !",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                              $.ajax({
+                                      url: "/baja_otros/confirmar/" + punto,
+                                      data: "id="+punto+"&_token={{ csrf_token()}}",
+                                      dataType: "json",
+                                      method: "POST",
+                                      success: function(result)
+                                      {
+                                          if (result['result'] != 'ok') // Era ==
+                                          {
+                                              swal("El vehículo no puede ser dado de Baja !", "Contiene datos pendientes, borrelas antes de poder continuar...")
+                                          }
+                                          else
+                                          {
+                                              swal("Eliminado!", "El vehículo fue eliminado.", "success");
+
+                                              location.reload();
+                                          }
+                                      },
+                                      fail: function(){
+                                          swal("Error !", "Existen datos pendientes, antes de poder eliminar la novedad...");
+                                      },
+                                      beforeSend: function(){
+
+                                      }
+                                  });
+
+                                swal("Eliminado!", "El Vehiculo fue vendido.", "success");
+                            })
+                      }
+                  },
+                  fail: function(){
+                      swal("Error !", "Contiene digitalizaciones adjuntas, borrelas antes de poder eliminar la novedad...");
+                  },
+                  beforeSend: function(){
+
+                  }
+              });
+
+          }
 </script>
+
+<!-- SWEET ALERT-->
+<!-- <script src="/vendor/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{{ asset('js/sweetalert.min.js') }}"></script>-->
+<script src="/vendor/sweetalert/dist/sweetalert.min.js"></script>
 
 @endsection
 
+@include('novedadeslist.sini3-create')
+@include('novedadeslist.sini3-edit')
 @include('novedadeslist.rto-create')
 @include('novedadeslist.rto-edit')
 @include('novedadeslist.multa-create')
+@include('novedadeslist.multa-edit')
 @include('novedadeslist.sini-create')
+@include('novedadeslist.sini-edit')
+@include('novedadeslist.baja-create')
+@include('novedadeslist.baja-edit')
+@include('novedadeslist.comprador-create')
+@include('novedadeslist.comprador-edit')
+@include('novedadeslist.libredm-create')
+@include('novedadeslist.libredm-edit')
+@include('novedadeslist.libredp-create')
+@include('novedadeslist.libredp-edit')
+@include('novedadeslist.dominio-create')
+@include('novedadeslist.dominio-edit')
+@include('novedadeslist.denuncia-create')
+@include('novedadeslist.denuncia-edit')
+@include('novedadeslist.policial-create')
+@include('novedadeslist.policial-edit')
+@include('novedadeslist.ceta-create')
+@include('novedadeslist.ceta-edit')
+@include('novedadeslist.f381-create')
+@include('novedadeslist.f381-edit')
+@include('novedadeslist.dnrpa-create')
+@include('novedadeslist.dnrpa-edit')

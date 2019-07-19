@@ -213,7 +213,7 @@ class GruposController extends Controller
     public function delete($id)
     {
         // return "Mostrar form de edit $id";
-        $legajo = Mdl007::find($id);
+        $legajo = Veh007::find($id);
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 7;

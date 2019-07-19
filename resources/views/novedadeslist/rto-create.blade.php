@@ -33,16 +33,19 @@
                    <label class="col-form-label">Dominio * </label>
                    <div class="input-group " name="legajo" id="legajo" data-provide="" keyboardNavigation="false">
 
+                       <input class="form-control" type="text" value="{{ $legajo->dominio }}" name="rto_dominio2" id="rto_dominio2"
+                       autocomplete="off" maxlength="7" style="width: 80px" disabled>
                        <input class="form-control" type="text" value="{{ $legajo->dominio }}" name="rto_dominio" id="rto_dominio"
-                       required autocomplete="off" maxlength="7" style="width: 80px" disabled>
+                       autocomplete="off" maxlength="7" style="width: 80px" hidden readonly>
                      </div>
                 </div>
 
                 <div class="col-lg-3 mb-3">
                    <label class="col-form-label">Nro. Interno</label>
+                   <input class="form-control" type="text" name="rto_interno2" id="rto_interno2"
+                   disabled value="{{ old('codigo',$legajo->codigo) }}" autocomplete='off'>
                    <input class="form-control" type="text" name="rto_interno" id="rto_interno"
-                   disabled
-                   value="{{ old('codigo',$legajo->codigo) }}" autocomplete='off'>
+                   readonly value="{{ old('codigo',$legajo->codigo) }}" autocomplete='off' hidden>
                 </div>
 
                 <div class="col-lg-6 mb-6">
@@ -54,6 +57,28 @@
 
              </div>
           </div>
+
+          <div class="col-md-12">
+               <div class="form-row">
+                  <div class="col-lg-3 mb-3">
+                       <label class="col-form-label">Operario</label>
+                       <input class="form-control" type="number" name="rto_encarga" id="rto_encarga"
+                          value="" autocomplete='off' max="99999" min="0">
+                  </div>
+                  <!-- <div class="col-lg-1 mb-1" style="padding-top: 35px; max-width: 50px">
+                     <span class="input-group-append input-group-addon">
+                     <a href="/preocupacional/add_new" class="input-group-text fa fa-address-book-o" {{ $edicion?'':'disabled' }} ></a>
+                     </span>
+                  </div>
+                  <div class="col-lg-6 mb-6">
+                     <label class="col-form-label">Detalle</label>
+                     <input class="form-control" type="text" name="detalle" id="detalle"
+                     disabled
+                     value="{{ old('codigo',$legajo->detalle) }}" autocomplete='off'>
+                  </div>
+                  -->
+              </div>
+           </div>
 
          <div class="col-lg-12 mb-12">
             <div class="form-row">

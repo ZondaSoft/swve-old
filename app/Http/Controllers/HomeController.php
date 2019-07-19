@@ -8,7 +8,11 @@ use App\Veh001;
 use App\Veh007;
 use App\Veh010;
 use App\Veh011;
-use App\Veh012;
+use App\Veh012; // Siniestros
+use App\Veh015; // Siniestros de terceros
+use App\Veh025; // Inicio de Baja o Vtas
+use App\Veh026; // Libre deuda multas
+use App\Veh027; // Comprador
 
 class HomeController extends Controller
 {
@@ -34,6 +38,10 @@ class HomeController extends Controller
 
         $legajoNew->fecha = Carbon::parse(Carbon::now())->format('d/m/Y');
         $legajoNew->vencimient = Carbon::parse(new Carbon('next year'))->format('d/m/Y');
+        $legajoNew->importe = 0.00;
+
+        $siniestrosTer= null;
+        $multas= null;
 
 
         if ($id == null) {
@@ -70,26 +78,69 @@ class HomeController extends Controller
                 $legajo = Veh001::latest('id')->first();
         }
 
-
         // Si la var. $direction muestra que el cursor se mueve al final
         if ($direction == 9) {
             $legajo = Veh001::latest('id')->first();
         }
-
 
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 1;
         $legajo->f_alta = Carbon::parse($legajo->f_alta)->format('d/m/Y');
 
-        // Combos de tablas anexas
-        $novedades  = Veh010::orderBy('detalle')->paginate(8);
-        $multas     = Veh011::orderBy('detalle')->paginate(8);
-        $siniestros = Veh012::orderBy('detalle')->paginate(8);
+        // Datos de tablas anexas
+        $novedades  = Veh010::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8); // RTO
+        $multas     = Veh011::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $siniestros = Veh012::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
+        $siniestrosTer = Veh015::orderBy('fecha')->where('dominio',$legajo->dominio)->paginate(8);
         $tipos      = Veh007::orderBy('codigo')->get();
+        $baja       = Veh025::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->first();
 
-        return view('home')->with(compact('legajo','agregar','edicion','active','novedades','siniestros','multas','tipos','legajoNew'));
+        if ($baja != null) {
+          if ($baja->fecha != null) {
+            $baja->fecha = Carbon::parse($baja->fecha)->format('d/m/Y');
+          }
+        }
+
+        $comprador = Veh027::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->first();
+        $libreDM   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',1)->first();
+        if ($libreDM != null) {
+            $libreDM->fecha = Carbon::parse($libreDM->fecha)->format('d/m/Y');
+        }
+        $libreDP   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',2)->first();
+        if ($libreDP != null) {
+            $libreDP->fecha = Carbon::parse($libreDP->fecha)->format('d/m/Y');
+        }
+        $dominio   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',3)->first();
+        if ($dominio != null) {
+            $dominio->fecha = Carbon::parse($dominio->fecha)->format('d/m/Y');
+        }
+        $denuncia   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',4)->first();
+        if ($denuncia != null) {
+            $denuncia->fecha = Carbon::parse($denuncia->fecha)->format('d/m/Y');
+        }
+        $policial   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',5)->first();
+        if ($policial != null) {
+            $policial->fecha = Carbon::parse($policial->fecha)->format('d/m/Y');
+        }
+        $ceta   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',6)->first();
+        if ($ceta != null) {
+            $ceta->fecha = Carbon::parse($ceta->fecha)->format('d/m/Y');
+        }
+        $f381   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',10)->first();
+        if ($f381 != null) {
+            $f381->fecha = Carbon::parse($f381->fecha)->format('d/m/Y');
+        }
+        $dnrpa   = Veh026::orderBy('dominio')->get()->where('dominio',$legajo->dominio)->where('tramite',11)->first();
+        if ($dnrpa != null) {
+            $dnrpa->fecha = Carbon::parse($dnrpa->fecha)->format('d/m/Y');
+        }
+
+
+        return view('home')->with(compact('legajo','agregar','edicion','active','novedades','siniestros',
+          'multas','tipos','legajoNew','siniestrosTer','baja','comprador','libreDM','libreDP','dominio','denuncia','policial','ceta','f381','dnrpa'));
     }
+
 
 
     public function move(Request $request, $id = null)
@@ -124,6 +175,7 @@ class HomeController extends Controller
             return redirect('/home/'.$legajo->id);
     }
 
+
     /**
      * Show the application dashboard.
      *
@@ -136,11 +188,19 @@ class HomeController extends Controller
         $agregar = True;
         $active = 1;
 
-        $novedades = Veh010::orderBy('detalle')->paginate(8);
-        $siniestros = Veh010::orderBy('detalle')->where('tipo','Siniestros')->paginate(8);
+        //$novedades = Veh010::orderBy('detalle')->paginate(8);
+        //$siniestros = Veh010::orderBy('detalle')->where('tipo','Siniestros')->paginate(8);
         $tipos  = Veh007::orderBy('detalle')->get();
 
-        return view('home')->with(compact('legajo','agregar','edicion','active','tipos','novedades','siniestros'));
+        $siniestrosTer= null;
+        $multas= null;
+        $baja= null;
+        $siniestros = null;
+        $novedades = null;
+
+        $legajoNew = new Veh010;
+
+        return view('home')->with(compact('legajo','agregar','edicion','active','tipos','novedades','siniestros','siniestrosTer','multas','baja','legajoNew'));
     }
 
 
@@ -259,9 +319,6 @@ class HomeController extends Controller
         return redirect('/home');
     }
 
-
-
-
     public function delete($id)
     {
         // return "Mostrar form de edit $id";
@@ -274,8 +331,6 @@ class HomeController extends Controller
 
         return redirect("/home");
     }
-
-
 
     public function search(Request $request)
     {

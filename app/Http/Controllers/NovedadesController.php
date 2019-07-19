@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Sue001;
-use App\Sue011;
-use App\Sue071;
-use App\Sue028;
+use App\Veh001;
+use App\Veh002;
+use App\Veh010;
 
 class NovedadesController extends Controller
 {
@@ -72,24 +71,14 @@ class NovedadesController extends Controller
          //dd($periodo->periodo);
 
 
-         if ($periodo != null) {
-             $periodo2 = substr($periodo->periodo,3,4) . substr($periodo->periodo,0,2);
-
-             $novedades = Sue028::orderBy('fecha')->where('periodo',$periodo2)->paginate(9);
-
-             $novedades->periodo = $periodo->periodo;
-         } else  {
-             $novedades = Sue028::orderBy('fecha')->where('id',0)->paginate(9);
-
-             $novedades->periodo = "  /    ";
-         }
+         $novedades = Veh010::orderBy('fecha')->where('id',0)->paginate(9);
 
          //dd($novedades->periodo);
 
          // Si a pesar de todos los controles $legajo es null es porque no hay registros  // if ($legajo == null)
          $legajo = new Sue001;
 
-         $legajoNew = new Sue028;
+         $legajoNew = new Veh010;
 
          $agregar = False;
          $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
@@ -98,12 +87,10 @@ class NovedadesController extends Controller
          $legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
 
          // Combos de tablas anexas
-         $novedades = Sue028::orderBy('fecha')->where('periodo',$periodo2)->paginate(9);
-         $legajos = Sue001::name('')->orderBy('codigo')->paginate(8);
-         $sectores = Sue011::orderBy('detalle')->get();
+         $novedades = Veh010::orderBy('fecha')->where('periodo',$periodo2)->paginate(9);
          $novedad = $novedades->first();
 
-         return view('novedades.index')->with(compact('legajos','legajo','agregar','edicion','active','sectores','ccostos','jerarquias','categorias','cuadrillas','obras','sindicatos','convenios','contratos','novedades','novedad','periodo','legajoNew'));
+         return view('novedades.index')->with(compact('legajos','legajo','agregar','edicion','active','novedades','novedad','legajoNew'));
      }
 
 

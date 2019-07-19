@@ -145,10 +145,11 @@
 
 
                <!-- START Alert menu-->
-               <!-- <li class="nav-item dropdown dropdown-list">
+               <li class="nav-item dropdown dropdown-list">
                   <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" data-toggle="dropdown">
                      <em class="icon-bell"></em>
-                     <span class="badge badge-danger">11</span>
+                     <!--
+                     <span class="badge badge-danger">11</span> -->
                   </a>
                   <!-- START Dropdown menu-->
                   <div class="dropdown-menu dropdown-menu-right animated flipInX">
@@ -159,11 +160,11 @@
                            <div class="list-group-item list-group-item-action">
                               <div class="media">
                                  <div class="align-self-start mr-2">
-                                    <em class="fa fa-twitter fa-2x text-info"></em>
+                                    <em class="fa fa-envelope fa-2x text-info"></em>
                                  </div>
                                  <div class="media-body">
-                                    <p class="m-0">New followers</p>
-                                    <p class="m-0 text-muted text-sm">1 new follower</p>
+                                    <p class="m-0">Sin vencimientos de R.T.O.</p>
+                                    <p class="m-0 text-muted text-sm">...</p>
                                  </div>
                               </div>
                            </div>
@@ -174,8 +175,8 @@
                                     <em class="fa fa-envelope fa-2x text-warning"></em>
                                  </div>
                                  <div class="media-body">
-                                    <p class="m-0">New e-mails</p>
-                                    <p class="m-0 text-muted text-sm">You have 10 new emails</p>
+                                    <p class="m-0">Sin siniestros pendientes</p>
+                                    <p class="m-0 text-muted text-sm">...</p>
                                  </div>
                               </div>
                            </div>
@@ -183,21 +184,21 @@
                            <div class="list-group-item list-group-item-action">
                               <div class="media">
                                  <div class="align-self-start mr-2">
-                                    <em class="fa fa-tasks fa-2x text-success"></em>
+                                    <em class="fa fa-envelope fa-2x text-success"></em>
                                  </div>
                                  <div class="media-body">
-                                    <p class="m-0">Pending Tasks</p>
-                                    <p class="m-0 text-muted text-sm">11 pending task</p>
+                                    <p class="m-0">Sin bajas pendientes</p>
+                                    <p class="m-0 text-muted text-sm">...</p>
                                  </div>
                               </div>
                            </div>
-                           <!-- last list item-->
+                           <!-- last list item
                            <div class="list-group-item list-group-item-action">
                               <span class="d-flex align-items-center">
                                  <span class="text-sm">More notifications</span>
                                  <span class="badge badge-danger ml-auto">14</span>
                               </span>
-                           </div>
+                           </div> -->
                         </div>
                         <!-- END list group-->
                      </div>
